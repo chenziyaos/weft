@@ -14,7 +14,7 @@ All notable changes to this repository are recorded here. The format follows
   history.
 - `npm run cli:pack` builds the `weft-canvas` tarball from source; `npm test`
   runs the CLI unit tests plus the layout, live-log and subagent checks.
-- GitHub Actions CI (lint, build, test on Node 20 and 22), issue templates,
+- GitHub Actions CI (lint, build, test on Node 20, 22 and 24), issue templates,
   `SECURITY.md`, `CODE_OF_CONDUCT.md` and Dependabot configuration.
 - The Pages workflow also publishes a static build of the app under `/app/`,
   so `#view=` share links work without a server.

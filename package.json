@@ -2,6 +2,18 @@
   "name": "weft",
   "private": true,
   "version": "0.2.0",
+  "description": "Weft — an infinite graph canvas where every step's input is explicit, versioned, and written back from a host agent.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chenziyaos/weft.git"
+  },
+  "homepage": "https://chenziyaos.github.io/weft/",
+  "bugs": {
+    "url": "https://github.com/chenziyaos/weft/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "type": "module",
   "bin": {
     "weft": "cli/dist/weft.mjs"
@@ -91,7 +103,6 @@
     "vite": "^7.3.1",
     "vitepress": "^1.6.4"
   },
-  "description": "Weft — an infinite graph canvas where every step's input is explicit, versioned, and written back from a host agent.",
   "keywords": [
     "weft",
     "graph",
