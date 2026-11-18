@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use Weft in your research, please cite it as below."
+title: "Weft: an instrument for legible human-AI collaboration"
+type: software
+authors:
+  - family-names: "Chen"
+    given-names: "Xia"
+  - family-names: "Chen"
+    given-names: "Ziyao"
+repository-code: "https://github.com/chenziyaos/weft"
+url: "https://github.com/chenziyaos/weft"
+license: MIT
+references:
+  - type: software
+    title: "ThoughtDAG"
+    authors:
+      - family-names: "Chen"
+        given-names: "Xia"
+    repository-code: "https://github.com/chenxiachan/thoughtdag"
+    license: MIT
+keywords:
+  - human-AI interaction
+  - context engineering
+  - reasoning graph
+  - research instrument
+  - large language models
+abstract: >-
+  Weft turns LLM conversations into an editable thought graph on an
+  infinite canvas. One rule governs everything: a wire is context. The
+  instrument keeps human-AI collaboration legible: context assembly is
+  visible and layered, every generation records an upstream fingerprint,
+  stale answers are flagged and replayable in dependency order, and runs
+  export as auditable manifests. Reusable workflow templates (paradigms)
+  let researchers design, run, and re-run reasoning experiments.

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://chenziyaos.github.io/weft/sitemap.xml

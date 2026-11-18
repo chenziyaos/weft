@@ -1,0 +1,53 @@
+{
+  "name": "weft-canvas",
+  "version": "0.4.5",
+  "mcpName": "io.github.chenziyaos/weft",
+  "description": "Weft for local use: the canvas app (weft serve), the agent Skill that edits it, and the why layer over local Claude Code, Codex and DeepSeek Harness sessions. Source files are never written.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "weft": "dist/weft.mjs"
+  },
+  "files": [
+    "dist/weft.mjs",
+    "app/",
+    "skill/weft-canvas/SKILL.md",
+    "host-dist/host-handoff.mjs",
+    "host-dist/weft.mjs",
+    "scripts/install-skill.mjs",
+    "commands/",
+    "README.md",
+    "server.json",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "cd .. && npm run cli:build && npm run host:build",
+    "build:package": "npm run build && cd .. && npm run build && npm run serve:build",
+    "prepack": "npm run build:package && node ../scripts/stage-cli-package.mjs",
+    "postpack": "rm -rf skill host-dist scripts app commands",
+    "test": "npm run build && npm --prefix .. run desktop:why && node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chenziyaos/weft.git",
+    "directory": "cli"
+  },
+  "homepage": "https://github.com/chenziyaos/weft/tree/main/cli#readme",
+  "bugs": {
+    "url": "https://github.com/chenziyaos/weft/issues"
+  },
+  "keywords": [
+    "weft",
+    "canvas",
+    "claude-code",
+    "codex",
+    "dsh",
+    "agent",
+    "context",
+    "provenance",
+    "why"
+  ]
+}

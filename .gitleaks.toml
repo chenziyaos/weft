@@ -1,0 +1,10 @@
+# Secret scanning: `gitleaks git .` (history) or `gitleaks dir .` (working tree).
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Benchmark run records: cache_key values are SHA-256 content hashes, not credentials"
+condition = "AND"
+paths = ['''^benchmark/runs/.+\.json$''']
+regexTarget = "line"
+regexes = ['''"cache_key":\s*"[0-9a-f]{64}"''']

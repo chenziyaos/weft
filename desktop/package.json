@@ -1,0 +1,82 @@
+{
+  "name": "weft-desktop",
+  "private": true,
+  "version": "0.5.17",
+  "description": "Desktop shell for Weft — same app, same server, one window",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "payload": "node scripts/prepare-payload.mjs",
+    "dist:mac": "npm run payload && electron-builder --mac dmg zip --arm64 --x64 --publish never",
+    "dist:win": "npm run payload && electron-builder --win nsis --x64 --publish never",
+    "dist:linux": "npm run payload && electron-builder --linux AppImage --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "^43.3.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "io.github.chenziyaos.weft",
+    "productName": "Weft",
+    "protocols": [
+      {
+        "name": "Weft",
+        "schemes": [
+          "weft"
+        ]
+      }
+    ],
+    "icon": "build/icon.png",
+    "directories": {
+      "output": "out"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json",
+      "splash.html",
+      "agents/**"
+    ],
+    "extraResources": [
+      {
+        "from": "payload",
+        "to": "payload"
+      }
+    ],
+    "afterPack": "scripts/after-pack.cjs",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "notarize": true
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage",
+      "category": "Office"
+    },
+    "npmRebuild": false,
+    "publish": null
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9"
+  }
+}

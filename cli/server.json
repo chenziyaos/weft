@@ -1,0 +1,31 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.chenziyaos/weft",
+  "title": "Weft",
+  "description": "Search local AI conversations by file or phrase and recall source turns. Four read-only tools.",
+  "version": "0.4.5",
+  "repository": {
+    "url": "https://github.com/chenziyaos/weft",
+    "source": "github",
+    "subfolder": "cli"
+  },
+  "websiteUrl": "https://github.com/chenziyaos/weft/blob/main/docs/guides/why-layer.md",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "weft-canvas",
+      "version": "0.4.5",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        }
+      ]
+    }
+  ]
+}
