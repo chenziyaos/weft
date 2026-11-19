@@ -145,7 +145,7 @@ Optional pieces:
 - The desktop shell (`desktop/`) builds from source; no signed installers are published.
 - The host handoff panel is Chinese-only; the rest of the UI is English and Chinese.
 - Session mirrors read the on-disk formats of Claude Code, Codex, DeepSeek Harness and Pi as observed; a format change in those tools can break the mirror until the reader is updated.
-- Acceptance scripts were run on macOS with local Chrome; other platforms are not covered. What was run, and what it does not establish, is in [VERIFICATION.md](VERIFICATION.md).
+- The browser acceptance scripts that need no model run on macOS by hand and nightly on Linux in CI; Windows is not covered. What was run, and what it does not establish, is in [VERIFICATION.md](VERIFICATION.md).
 
 ## Troubleshooting
 

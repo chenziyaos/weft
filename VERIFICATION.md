@@ -81,9 +81,11 @@ verified:
 - **No isolation verification.** Previous-session isolation, ambient memory
   exclusion and execution boundaries are the host's responsibility.
   `isolationVerified` is always `false` by design.
-- **One platform.** macOS with local Chrome only. Linux, Windows, mobile
-  browsers and Node 20 itself were not run. CI runs build, lint and unit tests
-  on Linux; it does not run the browser acceptance scripts.
+- **Two platforms.** The table above is a macOS run with local Chrome. Since
+  2026-11-19, `.github/workflows/acceptance.yml` also runs the twelve scripts
+  in the table nightly on Linux (ubuntu-latest, Node 22, the runner's Google
+  Chrome). Windows, mobile browsers and Node 20 are not run with these
+  scripts; CI runs build, lint and unit tests on Node 20, 22 and 24.
 - **Limits not stress-tested.** `verify-workspace-cli` rejects a file one byte
   over 32 MiB and an edit with 501 operations. The node, edge and depth limits
   (500 nodes, 4,000 edges, depth 128) and behavior near any limit at scale were
