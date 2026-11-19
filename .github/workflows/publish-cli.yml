@@ -121,6 +121,7 @@ jobs:
           exit 1
 
       # The Release asset is downloaded from npm, so it is byte-for-byte what users install.
+      # --latest=false keeps "Latest" (and electron-updater's /releases/latest) on desktop releases.
       - name: GitHub Release with the npm tarball
         if: github.ref_type == 'tag'
         env:
@@ -133,5 +134,5 @@ jobs:
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" "$RUNNER_TEMP"/release/*.tgz --clobber
           else
-            gh release create "$TAG" "$RUNNER_TEMP"/release/*.tgz --title "weft-canvas ${{ steps.meta.outputs.version }}" --notes-file "$RUNNER_TEMP/notes.md"
+            gh release create "$TAG" "$RUNNER_TEMP"/release/*.tgz --title "weft-canvas ${{ steps.meta.outputs.version }}" --notes-file "$RUNNER_TEMP/notes.md" --latest=false
           fi

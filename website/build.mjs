@@ -15,11 +15,12 @@ const attr = (node, name) => node.attrs?.find((a) => a.name === name)?.value;
 // The download block carries a hard-coded fallback version; the page rewrites it from the GitHub
 // API at runtime, but that call is rate-limited for anonymous visitors, so the build stamps the
 // latest release in: WEFT_RELEASE from the workflow, else the API, else the fallback stays.
+// Only desktop releases (v<version>) count; cli-v* releases carry just the npm CLI.
 async function latestRelease() {
   if (process.env.WEFT_RELEASE) return process.env.WEFT_RELEASE.trim();
   try {
-    const res = await fetch('https://api.github.com/repos/chenziyaos/weft/releases/latest', { signal: AbortSignal.timeout(5000) });
-    if (res.ok) return (await res.json()).tag_name;
+    const res = await fetch('https://api.github.com/repos/chenziyaos/weft/releases?per_page=30', { signal: AbortSignal.timeout(5000) });
+    if (res.ok) return (await res.json()).find((r) => /^v\d/.test(r.tag_name))?.tag_name ?? null;
   } catch { /* offline build keeps the fallback */ }
   return null;
 }

@@ -7,6 +7,13 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
 
 ## [Unreleased]
 
+### Fixed
+
+- The website download block, the Pages build and the desktop update notice
+  read only desktop releases (`v<version>` tags); a `cli-v*` release no longer
+  shows up as a desktop version. CLI releases are created without the
+  "Latest" mark.
+
 ## [cli-v0.5.0] - 2026-11-19
 
 ### Added
