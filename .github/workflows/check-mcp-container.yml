@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build the CLI image from source
         run: docker build -f cli/Dockerfile -t weft-mcp-check .
       - name: Check stdio without network access or source sessions
