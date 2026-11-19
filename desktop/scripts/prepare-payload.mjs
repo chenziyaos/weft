@@ -22,7 +22,6 @@ const SERVER_DEPS = [
   'cors',
   'ai',
   'zod',
-  'zhipu-ai-provider',
   '@ai-sdk/openai-compatible',
   '@ai-sdk/mcp',
   '@ai-sdk/openai',

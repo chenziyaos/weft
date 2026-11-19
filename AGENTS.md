@@ -17,7 +17,7 @@ npm test         # CLI 单测 + layout / live-log / subagent 检查
 
 ## 架构
 
-- `server.mjs` — 唯一后端文件：Express 代理，用 Vercel AI SDK（`ai` + `@ai-sdk/openai-compatible` + `zhipu-ai-provider`）调 LLM；含 agentic 网页搜索 + 行内引用（搜索后保证有综合回答）。
+- `server.mjs` — 唯一后端文件：Express 代理，用 Vercel AI SDK（`ai` + `@ai-sdk/*` providers，智谱等走 `@ai-sdk/openai-compatible`）调 LLM；含 agentic 网页搜索 + 行内引用（搜索后保证有综合回答）。
 - `src/store/` — zustand 全局状态；持久化用 idb-keyval（IndexedDB）。
 - `src/components/` — 画布基于 `@xyflow/react`（React Flow）：`ThoughtNode`、`ThoughtEdgeView`、`SelectionToolbar`（圈选对齐，对齐前有确认提示）、`focus-panel/`。
 - `src/lib/api.ts` — 前端到 server.mjs 的调用层。
