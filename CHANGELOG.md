@@ -7,6 +7,8 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
 
 ## [Unreleased]
 
+## [cli-v0.5.1] - 2026-11-19
+
 ### Added
 
 - Claude Code and Codex plugin (`plugins/weft`, listed in
@@ -19,6 +21,9 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
 - When no `weft` command is installed, `/weft` and `$weft` fall back to
   `npx -y weft-canvas` and suggest `npm install -g weft-canvas`, instead of
   pointing at a source install.
+- The npm package is smaller: three unreferenced cover images (4.8 MB) are
+  gone from the bundled app, the bundled server is whitespace- and
+  syntax-minified, and the PDF worker is pdfjs's minified build.
 
 ### Fixed
 
