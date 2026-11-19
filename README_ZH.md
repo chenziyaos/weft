@@ -126,7 +126,7 @@ codex plugin add weft@weft
 - 桌面外壳（`desktop/`）需要从源码构建，没有发布签名安装包。
 - 宿主交接面板目前只有中文；界面其余部分中英双语。
 - 会话镜像按观察到的磁盘格式读取 Claude Code、Codex、DeepSeek Harness 和 Pi；这些工具改格式后，镜像可能失效，直到读取器跟上。
-- 验收脚本在 macOS + 本机 Chrome 上运行，其他平台没有覆盖。跑了什么、不能说明什么，见 [VERIFICATION_ZH.md](VERIFICATION_ZH.md)。
+- 不需要模型的浏览器验收脚本在 macOS 上手动跑，并在 CI 里每晚在 Linux 上跑；Windows 没有覆盖。跑了什么、不能说明什么，见 [VERIFICATION_ZH.md](VERIFICATION_ZH.md)。
 
 ## 常见问题
 

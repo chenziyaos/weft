@@ -65,7 +65,7 @@
 - **没有真实模型。** 这些运行里的答案都是合成样本或来自本地替身端点。回答质量、各家 provider 的兼容性、决策模型的校准都没有测量。
 - **没有真实宿主。** 本次记录没有覆盖 Claude Code、Codex 发现并运行已安装 Skill 的过程。bundle 里的 `host`、`runId`、`executionMode` 是调用方的声明，不是证据。
 - **没有隔离验证。** 与上一会话的隔离、环境记忆的排除、执行边界都由宿主负责。`isolationVerified` 按设计恒为 `false`。
-- **只有一个平台。** 只在 macOS + 本机 Chrome 上跑过。Linux、Windows、移动端浏览器以及 Node 20 本身都没有跑。CI 在 Linux 上跑构建、lint 和单元测试，不跑浏览器验收脚本。
+- **两个平台。** 上表是 macOS + 本机 Chrome 的结果。从 2026-11-19 起，`.github/workflows/acceptance.yml` 每晚在 Linux（ubuntu-latest、Node 22、runner 自带的 Google Chrome）上跑表中的 12 个脚本。Windows、移动端浏览器和 Node 20 没有跑这些脚本；CI 在 Node 20、22、24 上跑构建、lint 和单元测试。
 - **限制没有做压力测试。** `verify-workspace-cli` 会拒绝超出 32 MiB 一个字节的文件和含 501 个操作的编辑。节点、边、深度限制（500 个节点、4,000 条边、深度 128）以及接近任何限制时的大规模表现都没有测量。
 - **指纹只覆盖画布编译出的输入**，不覆盖 provider 侧状态或 Agent 运行时自带的系统提示词。哈希能发现漂移，不能证明作者身份。
 - **持久化保护有范围。** 普通保存用 compare-and-set，workspace 同步会检查已存的封装。跨标签页的项目元数据变更、删除、迁移、真实磁盘故障和配额恢复不在承诺之内。遇到保存冲突时，请**先**导出未保存的编辑再刷新。
