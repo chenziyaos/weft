@@ -50,7 +50,7 @@ weft serve                               # 在 http://localhost:3001 提供画�
 
 只想跑一次、不全局安装，用 `npx weft-canvas serve`。画布存在浏览器里（IndexedDB），每次请打开同一个地址。
 
-**作为 Claude Code 或 Codex 插件安装。** 插件包含会话命令（Claude Code 里是 `/weft:weft`，Codex 里是 `weft` Skill）、`weft-canvas` Skill 和只读 MCP server（通过 `npx weft-canvas mcp` 运行）。插件不含画布应用，画布仍用 `weft serve` 或桌面版打开。`--sparse` 只检出插件相关的文件，不拉整个仓库。
+**作为 Claude Code 或 Codex 插件安装。** 插件包含会话命令（Claude Code 里是 `/weft:weft`，Codex 里是 `weft` Skill）、`weft-canvas` Skill 和只读 MCP server（直接运行插件里自带的 CLI，约 0.3 MB，不从 npm 下载）。插件不含画布应用，画布仍用 `weft serve` 或桌面版打开。`--sparse` 只检出插件相关的文件，不拉整个仓库。
 
 ```bash
 claude plugin marketplace add chenziyaos/weft --sparse .claude-plugin plugins

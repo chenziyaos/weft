@@ -7,6 +7,13 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
 
 ## [Unreleased]
 
+### Changed
+
+- The plugin runs its MCP server from the CLI bundle it carries
+  (`plugins/weft/server/weft.mjs`, about 0.3 MB) instead of
+  `npx weft-canvas@<version> mcp`, so it needs no npm download and no
+  published version.
+
 ## [cli-v0.5.1] - 2026-11-19
 
 ### Added

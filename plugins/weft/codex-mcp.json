@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "weft": {
+      "command": "node",
+      "args": [
+        "./server/weft.mjs",
+        "mcp"
+      ],
+      "cwd": "."
+    }
+  }
+}

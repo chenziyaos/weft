@@ -19,7 +19,7 @@
     "./skills/",
     "./codex-skills/"
   ],
-  "mcpServers": "./.mcp.json",
+  "mcpServers": "./codex-mcp.json",
   "interface": {
     "displayName": "Weft",
     "shortDescription": "Session history and canvas handoff for coding agents",
