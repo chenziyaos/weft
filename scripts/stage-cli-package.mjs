@@ -33,6 +33,7 @@ rmSync(path.join(cli, 'app/dist'), { recursive: true, force: true });
 rmSync(path.join(cli, 'app/runtime'), { recursive: true, force: true });
 copy('dist', 'app/dist', { recursive: true, filter: (src) => !HOSTED_ONLY.has(path.relative(path.join(root, 'dist'), src)) && !src.endsWith('.map') });
 copy('runtime', 'app/runtime', { recursive: true, filter: (src) => !src.endsWith('README.md') });
-copy('node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs', 'app/pdf.worker.mjs');
+// the minified build under the name the bundled server resolves
+copy('node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs', 'app/pdf.worker.mjs');
 copy('.env.example', 'app/env.example');
 console.log('staged host skill, agent commands and canvas app into cli/');

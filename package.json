@@ -37,7 +37,7 @@
     "cli:build": "esbuild cli/src/main.ts --bundle --platform=node --format=esm --target=node20 --define:import.meta.env={} --outfile=cli/dist/weft.mjs --log-level=warning",
     "graph:build": "esbuild scripts/host-handoff.ts --bundle --platform=node --format=esm --target=node20 --outfile=host-dist/weft.mjs",
     "host:build": "esbuild scripts/host-handoff.ts --bundle --platform=node --format=esm --target=node20 --outfile=host-dist/host-handoff.mjs && npm run graph:build",
-    "serve:build": "esbuild server.mjs --bundle --platform=node --format=esm --target=node20 --outfile=cli/app/server.mjs --log-level=warning --banner:js=\"import { createRequire as __weftRequire } from 'node:module'; const require = __weftRequire(import.meta.url);\"",
+    "serve:build": "esbuild server.mjs --bundle --platform=node --format=esm --target=node20 --minify-whitespace --minify-syntax --outfile=cli/app/server.mjs --log-level=warning --banner:js=\"import { createRequire as __weftRequire } from 'node:module'; const require = __weftRequire(import.meta.url);\"",
     "host:install": "node scripts/install-skill.mjs",
     "plugin:build": "node scripts/build-plugin.mjs",
     "build:offline": "vite build --base=./",
