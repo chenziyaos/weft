@@ -9,7 +9,7 @@ import { spawnSync } from 'node:child_process';
 import { isDeepStrictEqual as equal } from 'node:util';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, 'evidence', 'weft-workspace-ui-' + Date.now());
-await fs.mkdir(out);
+await fs.mkdir(out, { recursive: true });
 const home = path.join(out, 'empty-home'); await fs.mkdir(home);
 const origin = 'https://weft.workspace.invalid';
 const checks = [], commands = [], network = [], errors = [];

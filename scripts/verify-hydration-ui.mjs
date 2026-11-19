@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 import { isDeepStrictEqual as equal } from 'node:util';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, 'evidence', 'hydration-ui-' + Date.now());
-await fs.mkdir(out);
+await fs.mkdir(out, { recursive: true });
 const file = n => path.join(out, n);
 const save = (n, v) => fs.writeFile(file(n), typeof v === 'string' ? v : JSON.stringify(v, null, 2));
 const origin = 'https://hydration.weft.invalid';
@@ -36,7 +36,7 @@ async function held(p = page) { await p.waitForFunction(() => window.__idbGate.p
 async function release(fail = false, p = page) { await p.evaluate(fail => window.__idbGate.release(fail), fail); }
 async function answer(text) { await panel(false); await page.getByRole('button', { name: 'Fit View', exact: true }).click(); const n = page.locator('.react-flow__node[data-id="synthetic-root"]'); await n.locator('.drag-handle').click({ position: { x: 120, y: 20 } }); await n.getByRole('button', { name: 'Edit the answer', exact: true }).click(); await n.getByRole('textbox').fill(text); await n.getByRole('button', { name: 'Save', exact: true }).click(); }
 try {
-  browser = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true, env: { ...process.env, LD_LIBRARY_PATH: '/home/mira/.local/chromium-libs/usr/lib/x86_64-linux-gnu:/home/mira/.local/chromium-libs/lib/x86_64-linux-gnu' }, args: ['--no-sandbox', '--disable-background-networking', '--disable-component-update', '--disable-sync', '--no-first-run', '--host-resolver-rules=MAP * ~NOTFOUND'] });
+  browser = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true, args: ['--no-sandbox', '--disable-background-networking', '--disable-component-update', '--disable-sync', '--no-first-run', '--host-resolver-rules=MAP * ~NOTFOUND'] });
   context = await browser.newContext({ viewport: { width: 1600, height: 1000 }, locale: 'en-US', acceptDownloads: true, serviceWorkers: 'block' }); context.setDefaultTimeout(12000);
   await context.tracing.start({ screenshots: true, snapshots: true, sources: false });
   await context.addInitScript(() => {

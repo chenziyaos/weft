@@ -144,7 +144,7 @@ try {
   const both = await wait(async () => (await p2.getByText('CC question 1', { exact: false }).count()) > 0 && (await p2.getByText('Codex question', { exact: false }).count()) > 0);
   await p2.screenshot({ path: file('05-conversation-map.png') });
   await check('The conversation map lists both the Claude Code and the Codex session', both);
-  await p2.getByRole('button', { name: '接入' }).click();
+  await p2.getByRole('button', { name: '接入', exact: true }).click();
   const sources = await p2.locator('[data-atlas-source]').evaluateAll((els) => els.map((e) => e.getAttribute('data-atlas-source')));
   await p2.screenshot({ path: file('06-sources.png') });
   await check('Its sources are the agents on this machine, without an empty harness entry', sources.includes('claude-projects') && sources.includes('codex-sessions') && !sources.includes('dsh-sessions'), { sources });
