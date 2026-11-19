@@ -313,7 +313,7 @@ weft graph workspace-export --workspace /absolute/answered.workspace.json --out 
 
 ## 安装薄 Skill
 
-`weft` 命令来自用本仓库构建的命令行包（`npm run cli:pack`，再 `npm install -g ./cli/weft-canvas-*.tgz`）。在要使用的项目目录里先预览，
+`weft` 命令来自 `weft-canvas` 包（`npm install -g weft-canvas`；也可用 `npm run cli:pack` 从源码构建同一个 tarball）。在要使用的项目目录里先预览，
 明确需要写入时才加 `--apply`（默认装给 Codex 和 Claude Code，`--hosts` 可改）：
 
 ```bash

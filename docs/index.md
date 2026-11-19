@@ -25,8 +25,7 @@ Open `http://localhost:5173`. You can configure a provider key or an OpenAI-comp
 For a single `weft` command (`weft serve` starts the server and opens the canvas; it also carries the why layer and the agent Skill installer):
 
 ```bash
-npm run cli:pack                          # builds the canvas + CLI, writes cli/weft-canvas-<version>.tgz
-npm install -g ./cli/weft-canvas-*.tgz
+npm install -g weft-canvas                # or run once: npx weft-canvas serve
 weft serve                                # http://localhost:3001
 ```
 

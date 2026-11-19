@@ -412,6 +412,7 @@ const USAGE = `Weft — the why layer
   weft suggest <term> [--limit N] [--json]   what a mistyped term could have meant: near words from the indexed text
   weft topics [--of <id>] [--json]           the topic table and its labels (named and labelled from the app)
   weft status                                what the index holds, and how much is evidence
+  weft --version                             print the CLI version
   weft purge [--cache]                       delete everything this tool stored (--cache: only the interpretation and text caches)
   weft events <session-file> [--touches]     the canonical events of one source file, one JSON per line
   weft bundle publish --file <canvas.weft.json> --node <id> [--tag name]
@@ -434,6 +435,10 @@ async function main(argv: string[]): Promise<void> {
   const shortValue = (name: string): string | undefined => { const i = rest.indexOf(`-${name}`); return i >= 0 ? rest[i + 1] : undefined; };
   const args = rest.filter((a, i) => !a.startsWith('--') && !(i > 0 && (rest[i - 1] === '--limit' || rest[i - 1] === '--canvas' || rest[i - 1] === '--in')));
 
+  if (cmd === '--version' || cmd === '-v' || cmd === 'version') {
+    console.log(CLI_VERSION);
+    return;
+  }
   if (cmd === 'index') {
     const r = await buildIndex(flag('full'), value('canvas'));
     const st = summarize(await loadFacts(), await loadCache());

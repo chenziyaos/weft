@@ -15,10 +15,7 @@ The Why layer indexes local Claude Code, Codex, DeepSeek Harness, Pi, and Weft c
 Install the command and build the local index:
 
 ```bash
-git clone https://github.com/chenziyaos/weft.git
-cd weft && npm install
-npm run cli:pack
-npm install -g ./cli/weft-canvas-*.tgz
+npm install -g weft-canvas
 weft index
 ```
 

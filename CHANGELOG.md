@@ -2,10 +2,27 @@
 
 All notable changes to this repository are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The web app
-(`package.json`, 0.2.0) and the CLI package (`cli/package.json`, `weft-canvas`
-0.4.5) carry separate version numbers.
+(`package.json`, 0.2.0) and the CLI package (`cli/package.json`, `weft-canvas`)
+carry separate version numbers; CLI releases are tagged `cli-v<version>`.
 
 ## [Unreleased]
+
+## [cli-v0.5.0] - 2026-11-19
+
+### Added
+
+- `weft-canvas` is published to npm: `npm install -g weft-canvas`, or
+  `npx weft-canvas serve` without a global install.
+- `.github/workflows/publish-cli.yml` publishes later `cli-v*` tags to npm
+  with provenance (Trusted Publishing) and to the MCP Registry.
+- `weft --version` (also `-v`, `version`) prints the CLI version.
+
+### Changed
+
+- Dependencies updated to the newest versions within their ranges (#13, #14,
+  #17); `zhipu-ai-provider` removed because it had no call sites.
+
+## Initial public release
 
 ### Added
 
@@ -21,8 +38,7 @@ All notable changes to this repository are recorded here. The format follows
 
 ### Changed
 
-- The CLI package is named `weft-canvas` and installs from a locally built
-  tarball; it is not published to a registry.
+- The CLI package is named `weft-canvas`.
 - The MCP container (`cli/Dockerfile`) builds the CLI from source.
 - `VERIFICATION.md` now records the acceptance scripts as run on this tree,
   with a list of what was not run.
