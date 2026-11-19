@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "weft": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "weft-canvas@0.5.0",
+        "mcp"
+      ]
+    }
+  }
+}

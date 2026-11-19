@@ -7,6 +7,19 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
 
 ## [Unreleased]
 
+### Added
+
+- Claude Code and Codex plugin (`plugins/weft`, listed in
+  `.claude-plugin/marketplace.json`): the `/weft` command, the `weft-canvas`
+  Skill and the read-only MCP server through `npx weft-canvas mcp`.
+  `npm run plugin:build` regenerates it; CI fails when it is out of date.
+
+### Changed
+
+- When no `weft` command is installed, `/weft` and `$weft` fall back to
+  `npx -y weft-canvas` and suggest `npm install -g weft-canvas`, instead of
+  pointing at a source install.
+
 ### Fixed
 
 - The website download block, the Pages build and the desktop update notice
