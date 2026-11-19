@@ -38,10 +38,11 @@ async function checkDesktop(): Promise<void> {
   if (Date.now() - lastDesktopCheck < DESKTOP_THROTTLE_MS) return;
   lastDesktopCheck = Date.now();
   try {
-    const res = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=1`);
+    // desktop releases are tagged v<version>; cli-v* releases belong to the npm CLI
+    const res = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=30`);
     if (!res.ok) return;
     const releases = await res.json() as { tag_name?: string }[];
-    const latest = releases?.[0]?.tag_name?.replace(/^v/, '');
+    const latest = releases?.find((r) => /^v\d/.test(r.tag_name ?? ''))?.tag_name?.replace(/^v/, '');
     if (!latest || latest === desktopVersion) return;
     notifiedDesktop = true;
     toast('info', fmt(t('update.desktopAvailable'), { v: latest }), 0, {

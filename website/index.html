@@ -3242,10 +3242,11 @@ dsh web</code>
         };
         setBadges();
         new MutationObserver(setBadges).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
-        fetch("https://api.github.com/repos/chenziyaos/weft/releases?per_page=1")
+        // desktop releases are tagged v<version>; cli-v* releases carry only the npm CLI
+        fetch("https://api.github.com/repos/chenziyaos/weft/releases?per_page=30")
           .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
           .then(function (rel) {
-            var release = rel && rel[0];
+            var release = rel && rel.filter(function (x) { return /^v\d/.test(x.tag_name); })[0];
             if (!release || !release.assets) return;
             document.getElementById("dl-version").textContent = release.tag_name;
             var mb = function (a) { return "≈" + Math.round(a.size / 1048576) + "MB"; };
