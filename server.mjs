@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import { streamText, generateText, tool, stepCountIs, smoothStream } from 'ai';
 import { z } from 'zod';
-import { createZhipu } from 'zhipu-ai-provider';
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport as StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
@@ -69,11 +68,9 @@ const register = (ids, provider, make, opts = {}) => {
 };
 
 if (ZHIPU_KEY) {
-  const zhipu = createZhipu({ apiKey: ZHIPU_KEY, baseURL: 'https://open.bigmodel.cn/api/paas/v4' });
-  // zhipu-ai-provider 0.3.1 DROPS image bytes (it sends image_url
-  // "data:image/png;base64," with an EMPTY payload — every image reads as
-  // "blank"). The same endpoint speaks the OpenAI protocol, and that
-  // provider's image conversion works, so vision goes through it.
+  // Zhipu goes through the OpenAI-compatible provider: the dedicated
+  // zhipu-ai-provider (0.3.1) dropped image bytes, sending an empty
+  // "data:image/png;base64," payload, so every image read as blank.
   const zhipuCompat = createOpenAICompatible({
     name: 'zhipu', apiKey: ZHIPU_KEY, baseURL: 'https://open.bigmodel.cn/api/paas/v4',
   });
