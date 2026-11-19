@@ -62,7 +62,7 @@
     "defuddle": "^0.19.2",
     "dompurify": "^3.4.13",
     "express": "^5.2.1",
-    "highlight.js": "^11.11.1",
+    "highlight.js": "^11.12.0",
     "html-to-image": "^1.11.13",
     "idb-keyval": "^6.2.6",
     "katex": "^0.16.28",
