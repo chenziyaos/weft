@@ -41,15 +41,14 @@ npm run dev            # 画布：http://localhost:5173（另开一个终端）
 
 打开 `http://localhost:5173`，点右上角**连接模型**，粘贴一家服务商的 key，或填任意 OpenAI 兼容接口的地址。然后在首页输入问题、回车。想先看看不接模型，点**载入示例画布**。
 
-**一条命令代替两个终端。** 构建一次命令行包，之后用 `weft serve`：
+**不 clone 也能用。** npm 上的 `weft-canvas` 包带着构建好的画布、代理和 `weft` 命令：
 
 ```bash
-npm run cli:pack                         # 构建画布与 CLI，生成 cli/weft-canvas-<版本>.tgz
-npm install -g ./cli/weft-canvas-*.tgz
+npm install -g weft-canvas
 weft serve                               # 在 http://localhost:3001 提供画布并打开浏览器
 ```
 
-这个包没有发布到任何 registry，你本地构建出的 tarball 就是安装包。画布存在浏览器里（IndexedDB），每次请打开同一个地址。
+只想跑一次、不全局安装，用 `npx weft-canvas serve`。画布存在浏览器里（IndexedDB），每次请打开同一个地址。
 
 ## 能做什么
 
@@ -149,7 +148,7 @@ weft serve                               # 在 http://localhost:3001 提供画�
 | `npm run build` | 类型检查并构建生产 Web 包到 `dist/` |
 | `npm run lint` | ESLint |
 | `npm test` | CLI 单测（先构建 CLI），加布局、实时日志、子 Agent 检查 |
-| `npm run cli:pack` | 构建 `weft-canvas` CLI tarball（画布、Skill、CLI 一起） |
+| `npm run cli:pack` | 构建 `weft-canvas` CLI tarball（画布、Skill、CLI 一起），与发布到 npm 的是同一份产物 |
 | `node scripts/verify-cli-package.mjs cli/weft-canvas-<版本>.tgz` | 把 tarball 装进空项目，在 Chrome 里实际驱动一遍 |
 | `npm run docs:dev` | 文档站 |
 | `npm run desktop` | 从源码启动 Electron 外壳 |
@@ -169,7 +168,7 @@ weft serve                               # 在 http://localhost:3001 提供画�
 
 ## 与 ThoughtDAG 的关系
 
-Weft 从 ThoughtDAG（[chenxiachan/thoughtdag](https://github.com/chenxiachan/thoughtdag)，MIT，© 2026 Xia Chen）起步并改名。画布模型（节点、连线即上下文、版本、重放、Agent 对话地图）、Why 层（`why`、`mcp`）和 context-bundle 协议来自上游。本仓库新增：打包好的 CLI（`weft serve`、`open`、`graph`、`bundle`、`setup skill`）、画布 Skill 及其安装器、让终端 Agent 编辑已打开画布的实时桥，以及 `scripts/` 下的验收脚本。本仓库的 git 历史从头开始，上游历史见上游仓库。
+Weft 从 ThoughtDAG（[chenxiachan/thoughtdag](https://github.com/chenxiachan/thoughtdag)，MIT，© 2026 Xia Chen）起步并改名。画布模型（节点、连线即上下文、版本、重放、Agent 对话地图）、Why 层（`why`、`mcp`）和 context-bundle 协议来自上游。本仓库新增：打包好的 CLI（`weft serve`、`open`、`graph`、`bundle`、`setup skill`）、画布 Skill 及其安装器、让终端 Agent 编辑已打开画布的实时桥，以及 `scripts/` 下的验收脚本。本仓库的 git 历史从头开始，上游历史见上游仓库。两个项目各自独立演进，上游的改动不会定期合入 Weft。
 
 ## 许可证
 

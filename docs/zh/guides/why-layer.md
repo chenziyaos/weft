@@ -7,10 +7,7 @@ Why 层把本机 Claude Code、Codex、DeepSeek Harness、Pi 与 Weft 画布里�
 安装命令并建立本地索引：
 
 ```bash
-git clone https://github.com/chenziyaos/weft.git
-cd weft && npm install
-npm run cli:pack
-npm install -g ./cli/weft-canvas-*.tgz
+npm install -g weft-canvas
 weft index
 ```
 

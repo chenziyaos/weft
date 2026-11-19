@@ -51,3 +51,10 @@ test('setup rules adds one marked block to CLAUDE.md and AGENTS.md, keeps the us
   assert.ok(!readFileSync(join(proj, 'AGENTS.md'), 'utf8').includes('weft'));
   rmSync(tmp, { recursive: true, force: true });
 });
+
+test('--version, -v and version print the package version and nothing else', () => {
+  const { version } = JSON.parse(readFileSync(join(dirname(CLI), '..', 'package.json'), 'utf8'));
+  for (const a of ['--version', '-v', 'version']) {
+    assert.equal(execFileSync(process.execPath, [CLI, a], { cwd: tmpdir(), encoding: 'utf8' }), `${version}\n`);
+  }
+});

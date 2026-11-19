@@ -31,19 +31,16 @@ The screenshots and numbers in parts one, three, and four come from a real end-t
 
 ## Run it
 
-Requires Node 20 or newer. Install from source:
+Requires Node 20 or newer:
 
 ```bash
-git clone https://github.com/chenziyaos/weft.git
-cd weft && npm install
-npm run cli:pack                          # builds the canvas + CLI, writes cli/weft-canvas-<version>.tgz
-npm install -g ./cli/weft-canvas-*.tgz    # provides the `weft` command
+npm install -g weft-canvas                # provides the `weft` command
 weft serve
 ```
 
 The browser opens `http://localhost:3001`. Type a question on the home page and press Enter. Keep the terminal open; Ctrl+C stops it. Canvases persist in this address's browser storage, so always use the same address.
 
-Alternatively, in the repository root run `npm install`, then `npm run server` and `npm run dev`, and open `http://localhost:5173`.
+To run from source instead, clone https://github.com/chenziyaos/weft, run `npm install` in the repository root, then `npm run server` and `npm run dev`, and open `http://localhost:5173`.
 
 Models: any OpenAI-compatible endpoint (your own gateway, a local model) or a provider key will do — fill it in under model settings ([§1](#1-connect-a-model)).
 

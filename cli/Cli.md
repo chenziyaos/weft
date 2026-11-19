@@ -15,10 +15,7 @@ Weft 把「模型读到的上下文」变成画布上可见、可剪、可重连
 ## 安装
 
 ```bash
-git clone https://github.com/chenziyaos/weft.git
-cd weft && npm install
-npm run cli:pack
-npm install -g ./cli/weft-canvas-*.tgz
+npm install -g weft-canvas
 ```
 
 ## 命令一览

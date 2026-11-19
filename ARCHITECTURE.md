@@ -387,8 +387,8 @@ stored backup does not automatically contain later local edits.
 
 ## Install the thin host Skill
 
-The `weft` command comes from the CLI package built from this repository
-(`npm run cli:pack`, then `npm install -g ./cli/weft-canvas-*.tgz`). Run it in the
+The `weft` command comes from the `weft-canvas` package (`npm install -g
+weft-canvas`, or `npm run cli:pack` to build the same tarball from source). Run it in the
 project that should get the Skill; preview first and add `--apply` only when
 intended (Codex and Claude Code by default, `--hosts` to change):
 

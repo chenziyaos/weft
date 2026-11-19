@@ -3,10 +3,7 @@
 Weft on your machine: the canvas app, the Skill that lets local agents edit it, and the why layer over your agent sessions.
 
 ```bash
-git clone https://github.com/chenziyaos/weft.git
-cd weft && npm install
-npm run cli:pack
-npm install -g ./cli/weft-canvas-*.tgz   # provides the `weft` command
+npm install -g weft-canvas     # provides the `weft` command
 weft serve                     # open the canvas in the browser
 weft open <session-id>         # open one Claude Code / Codex session on the canvas
 weft why src/lib/api.ts        # the conversations that shaped a file

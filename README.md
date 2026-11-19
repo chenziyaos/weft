@@ -50,16 +50,14 @@ provider key or the URL of any OpenAI-compatible endpoint. Then type a question
 on the start page and press Enter. To look around without a model, click
 **Load example canvas**.
 
-**One command instead of two terminals.** Build the CLI package once and use `weft serve`:
+**Without cloning.** The `weft-canvas` package on npm carries the built canvas, the proxy and the `weft` command:
 
 ```bash
-npm run cli:pack                         # builds canvas + CLI into cli/weft-canvas-<version>.tgz
-npm install -g ./cli/weft-canvas-*.tgz
+npm install -g weft-canvas
 weft serve                               # serves the canvas on http://localhost:3001 and opens it
 ```
 
-The package is not published to a registry; the tarball you build is the install.
-Canvases are saved in the browser (IndexedDB), so open the same address each time.
+`npx weft-canvas serve` runs it once without a global install. Canvases are saved in the browser (IndexedDB), so open the same address each time.
 
 ## What it does
 
@@ -170,7 +168,7 @@ copy the Pages workflow publishes at <https://chenziyaos.github.io/weft/docs/>.
 | `npm run build` | Typecheck and production web build in `dist/` |
 | `npm run lint` | ESLint |
 | `npm test` | CLI unit tests (builds the CLI first) plus layout, live-log and subagent checks |
-| `npm run cli:pack` | The `weft-canvas` CLI tarball (canvas, Skill and CLI together) |
+| `npm run cli:pack` | The `weft-canvas` CLI tarball (canvas, Skill and CLI together), the same artifact that is published to npm |
 | `node scripts/verify-cli-package.mjs cli/weft-canvas-<version>.tgz` | Install the tarball into an empty project and drive it in Chrome |
 | `npm run docs:dev` | Documentation site |
 | `npm run desktop` | Electron shell from source |
@@ -197,7 +195,8 @@ context-bundle protocol come from that project. This repository adds the
 packaged CLI (`weft serve`, `open`, `graph`, `bundle`, `setup skill`), the canvas
 Skill and its installer, the live canvas bridge that lets terminal agents edit
 an open canvas, and the acceptance scripts in `scripts/`. Its git history starts
-fresh; upstream's history is in the upstream repository.
+fresh; upstream's history is in the upstream repository. The two projects evolve
+independently: upstream changes are not merged into Weft on a schedule.
 
 ## License
 

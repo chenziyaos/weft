@@ -3892,7 +3892,7 @@ var init_lib = __esm({
     DOSSIERS_LOCK = path.join(HOME, "dossiers.lock");
     DOSSIERS_LOCK_WAIT_MS = 5e3;
     dossierWrites = Promise.resolve();
-    CLI_VERSION = "0.4.5";
+    CLI_VERSION = "0.5.0";
     MCP_TOOLS = [
       { name: "why_check", description: "Cheap first question before editing a file: does this artifact have any history in local agent sessions? One line; history true/false.", inputSchema: { type: "object", properties: { path: { type: "string", description: "file path (absolute or relative to cwd), URL, or arxiv:<id>" } }, required: ["path"] } },
       { name: "why_file", description: "The turns across local Claude Code, Codex, DeepSeek Harness, Pi and Weft sessions that touched a file, URL or paper: when, what changed (\u0394, observed), what was asked, what the answer said about it (\u2248, a candidate explanation, not a verified reason). Each hit carries a deep link.", inputSchema: { type: "object", properties: { path: { type: "string" }, include_read: { type: "boolean", description: "also list turns that only read it (default false)" }, limit: { type: "number", description: "max hits (default 10)" } }, required: ["path"] } },
@@ -6429,6 +6429,7 @@ ${log.join("").trim()}`);
   weft suggest <term> [--limit N] [--json]   what a mistyped term could have meant: near words from the indexed text
   weft topics [--of <id>] [--json]           the topic table and its labels (named and labelled from the app)
   weft status                                what the index holds, and how much is evidence
+  weft --version                             print the CLI version
   weft purge [--cache]                       delete everything this tool stored (--cache: only the interpretation and text caches)
   weft events <session-file> [--touches]     the canonical events of one source file, one JSON per line
   weft bundle publish --file <canvas.weft.json> --node <id> [--tag name]
@@ -6455,6 +6456,10 @@ ${log.join("").trim()}`);
       return i >= 0 ? rest[i + 1] : void 0;
     };
     const args2 = rest.filter((a, i) => !a.startsWith("--") && !(i > 0 && (rest[i - 1] === "--limit" || rest[i - 1] === "--canvas" || rest[i - 1] === "--in")));
+    if (cmd === "--version" || cmd === "-v" || cmd === "version") {
+      console.log(CLI_VERSION2);
+      return;
+    }
     if (cmd === "index") {
       const r = await buildIndex2(flag("full"), value("canvas"));
       const st = summarize2(await loadFacts2(), await loadCache2());

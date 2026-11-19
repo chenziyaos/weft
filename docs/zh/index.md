@@ -25,8 +25,7 @@ npm run dev      # 画布：http://localhost:5173
 想要一条 `weft` 命令（`weft serve` 一步起服务并打开画布，另带 why 层和 Agent Skill 安装器）：
 
 ```bash
-npm run cli:pack                          # 构建画布与 CLI，生成 cli/weft-canvas-<版本>.tgz
-npm install -g ./cli/weft-canvas-*.tgz
+npm install -g weft-canvas                # 或只跑一次：npx weft-canvas serve
 weft serve                                # http://localhost:3001
 ```
 

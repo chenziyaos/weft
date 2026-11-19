@@ -201,13 +201,10 @@ node "$CLI" workspace-apply --workspace /abs/edited.workspace.json --result /abs
 
 ## 安装
 
-从源码安装：
+安装：
 
 ```bash
-git clone https://github.com/chenziyaos/weft.git
-cd weft && npm install
-npm run cli:pack
-npm install -g ./cli/weft-canvas-*.tgz
+npm install -g weft-canvas
 weft setup skill --hosts codex claude dsh --apply
 ```
 

@@ -31,19 +31,16 @@ Weft 把对话摊在一张画布上：每轮问答是一个节点，节点之间
 
 ## 先跑起来
 
-需要 Node 20 或更高版本。从源码安装：
+需要 Node 20 或更高版本：
 
 ```bash
-git clone https://github.com/chenziyaos/weft.git
-cd weft && npm install
-npm run cli:pack                          # 构建画布 + CLI，输出 cli/weft-canvas-<version>.tgz
-npm install -g ./cli/weft-canvas-*.tgz    # 安装 weft 命令
+npm install -g weft-canvas                # 安装 weft 命令
 weft serve
 ```
 
 浏览器会自动打开 `http://localhost:3001`，在首页输入框里写下问题，按回车就行。终端窗口保持开着，按 Ctrl+C 结束。画布保存在这个地址对应的浏览器存储里，所以每次都用同一个地址打开。
 
-也可以在仓库根目录 `npm install`，再分别运行 `npm run server` 和 `npm run dev`，打开 `http://localhost:5173`。
+也可以从源码运行：clone https://github.com/chenziyaos/weft，在仓库根目录 `npm install`，再分别运行 `npm run server` 和 `npm run dev`，打开 `http://localhost:5173`。
 
 模型可以用自己的：任意 OpenAI 兼容接口（自建网关、本地模型）或一家服务商的 key 都行，在模型设置里填上即可（见[第 1 节](#_1-连上模型)）。
 
