@@ -56,7 +56,7 @@
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@joplin/turndown-plugin-gfm": "^1.0.67",
     "@tailwindcss/vite": "^4.1.18",
-    "@xyflow/react": "^12.10.0",
+    "@xyflow/react": "^12.12.1",
     "ai": "^7.0.15",
     "cors": "^2.8.6",
     "defuddle": "^0.19.2",
