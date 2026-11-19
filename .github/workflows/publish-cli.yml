@@ -81,7 +81,8 @@ jobs:
         if: steps.npm.outputs.publish == 'true'
         run: |
           npm run cli:pack
-          npm publish "cli/weft-canvas-${{ steps.meta.outputs.version }}.tgz" --provenance --access public
+          # ./ matters: npm reads "cli/x.tgz" as the GitHub repository cli/x.tgz
+          npm publish "./cli/weft-canvas-${{ steps.meta.outputs.version }}.tgz" --provenance --access public
 
       - name: Wait for the npm version to be publicly readable
         run: |
