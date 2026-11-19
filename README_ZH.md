@@ -123,7 +123,7 @@ codex plugin add weft@weft
 
 - 预览和回执覆盖的是画布编译出的输入，不含服务商侧状态；用 Agent 运行时，Agent 运行时自己的系统提示词不在预览里。
 - 画布和回执存在你使用的那个浏览器配置里，没有同步也没有账号。用**导出备份（.json）**做备份。
-- 桌面外壳（`desktop/`）需要从源码构建，没有发布签名安装包。
+- [Releases](https://github.com/chenziyaos/weft/releases) 上的桌面安装包未签名。macOS 版只有 ad-hoc 签名、没有公证：第一次打开会被拦下，要到「系统设置 → 隐私与安全性 → 仍要打开」放行；应用内更新可能装不上，新版本请从 Releases 下载。Windows 的 SmartScreen 会提示一次（更多信息 → 仍要运行）。
 - 宿主交接面板目前只有中文；界面其余部分中英双语。
 - 会话镜像按观察到的磁盘格式读取 Claude Code、Codex、DeepSeek Harness 和 Pi；这些工具改格式后，镜像可能失效，直到读取器跟上。
 - 不需要模型的浏览器验收脚本在 macOS 上手动跑，并在 CI 里每晚在 Linux 上跑；Windows 没有覆盖。跑了什么、不能说明什么，见 [VERIFICATION_ZH.md](VERIFICATION_ZH.md)。

@@ -16,7 +16,7 @@ title: Feature status
 | Incremental session mirrors and tool-result attachments | Current | Curating a mirror does not rewrite source history |
 | Why layer CLI and read-only MCP | Published, experimental | Candidate explanations are not verified causes |
 | Embedded Harness canvas and Agent turns | Plugin 0.5.3 published | Regular-model answers stay on the canvas; Agent mode records real Harness turns |
-| Native Harness why tools and /why | Published in dsh-weft@0.5.3 | Candidate explanations are not verified causes |
+| Native Harness why tools and /why | In dsh-weft 0.5.3 and later | Candidate explanations are not verified causes |
 | Context Bundle v0 | Experimental proposal | Runnable fixtures do not make it a frozen compatibility standard |
 | Automatic multi-agent orchestration | Not a current product promise | Do not imply that Atlas schedules agents |
 | Rewriting existing source-agent history | Not supported | Appending a new Harness turn is not rewriting old logs |

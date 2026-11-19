@@ -54,11 +54,23 @@ jobs:
       - run: npm run build
       - run: npm ci
         working-directory: desktop
-      - run: npm run ${{ matrix.script }}
+      - name: npm run ${{ matrix.script }}
         working-directory: desktop
+        shell: bash
+        # Without a certificate the macOS app is ad-hoc signed, not notarized,
+        # and built without the hardened runtime: ad-hoc + hardened runtime
+        # refuses to load Electron Framework ("different Team IDs"). An empty
+        # CSC_LINK must be unset, or electron-builder reads the cwd as the
+        # certificate ("desktop not a file").
+        run: |
+          extra=()
+          if [ "$RUNNER_OS" = macOS ] && [ -z "$CSC_LINK" ]; then
+            unset CSC_LINK CSC_KEY_PASSWORD
+            export CSC_IDENTITY_AUTO_DISCOVERY=false
+            extra=(-c.mac.identity=- -c.mac.hardenedRuntime=false -c.mac.notarize=false)
+          fi
+          npm run ${{ matrix.script }} -- "${extra[@]}"
         env:
-          # macOS signing + notarization: absent secrets = unsigned build
-          # (electron-builder skips signing when CSC_LINK is empty)
           CSC_LINK: ${{ runner.os == 'macOS' && secrets.MAC_CERT_P12_BASE64 || '' }}
           CSC_KEY_PASSWORD: ${{ runner.os == 'macOS' && secrets.MAC_CERT_PASSWORD || '' }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -86,11 +98,71 @@ jobs:
           TAG: ${{ github.ref_name }}
           REPO: ${{ github.repository }}
 
-  publish:
-    if: startsWith(github.ref, 'refs/tags/')
-    needs: build
+  # The DeepSeek Harness plugin rides along as dsh-weft-<version>.tgz; `dsh plugin add` takes its URL.
+  dsh-plugin:
+    needs: prepare
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm pack
+        working-directory: dsh
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dsh-plugin
+          path: dsh/dsh-weft-*.tgz
+          if-no-files-found: error
+      - name: Upload into draft release
+        if: startsWith(github.ref, 'refs/tags/')
+        run: gh release upload "$TAG" dsh/dsh-weft-*.tgz -R "$REPO" --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+
+  # Same tarball to npm through Trusted Publishing (package dsh-weft → Settings →
+  # Trusted Publisher: chenziyaos/weft, desktop-build.yml, publish allowed). Not
+  # a prerequisite of the release: a failure here leaves the desktop release intact.
+  dsh-npm:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: dsh-plugin
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - run: npm install -g npm@11.19.0
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dsh-plugin
+      - name: Publish dsh-weft unless this version is on npm
+        run: |
+          tgz=$(ls dsh-weft-*.tgz)
+          v=${tgz#dsh-weft-}; v=${v%.tgz}
+          if npm view "dsh-weft@$v" version >/dev/null 2>&1; then echo "dsh-weft@$v is already on npm"; exit 0; fi
+          npm publish "./$tgz" --provenance --access public
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [build, dsh-plugin]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Release notes: the CHANGELOG section headed "## [<tag>]", when there is one.
+      - name: Release notes from CHANGELOG
+        run: |
+          awk -v h="## [$TAG]" 'index($0, h) == 1 { on = 1; next } on && /^## / { exit } on' CHANGELOG.md > notes.md
+          if [ -s notes.md ]; then gh release edit "$TAG" -R "$REPO" --notes-file notes.md; fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
       - name: Publish release (all platforms complete)
         run: |
           if [[ "$TAG" == *beta* ]]; then

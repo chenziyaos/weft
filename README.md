@@ -142,7 +142,7 @@ Optional pieces:
 
 - The preview and receipts cover the input the canvas compiles, not provider-side state; with an agent runner, the agent runtime's own system prompt is not in the preview.
 - Canvases and receipts live in the browser profile you used; there is no sync or account. Back up with **Export backup (.json)**.
-- The desktop shell (`desktop/`) builds from source; no signed installers are published.
+- Desktop installers on [Releases](https://github.com/chenziyaos/weft/releases) are unsigned. On macOS the app is ad-hoc signed and not notarized: the first launch is blocked until you allow it under System Settings → Privacy & Security → Open Anyway, and in-app updates may fail to install, so download new versions from Releases. Windows SmartScreen asks once (More info → Run anyway).
 - The host handoff panel is Chinese-only; the rest of the UI is English and Chinese.
 - Session mirrors read the on-disk formats of Claude Code, Codex, DeepSeek Harness and Pi as observed; a format change in those tools can break the mirror until the reader is updated.
 - The browser acceptance scripts that need no model run on macOS by hand and nightly on Linux in CI; Windows is not covered. What was run, and what it does not establish, is in [VERIFICATION.md](VERIFICATION.md).

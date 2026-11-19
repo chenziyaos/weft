@@ -78,7 +78,7 @@ Open [Session Atlas](./session-atlas) from the canvas menu to browse other conve
 
 ## Query history
 
-The published `dsh-weft@0.5.3` includes the canvas, session integration, and native history-query tools below. If you still use `0.4.4`, update the plugin to use these tools and the `/why` command. For standalone history queries, see [Why layer: CLI and MCP](./why-layer).
+`dsh-weft` 0.5.3 and later include the canvas, session integration, and native history-query tools below. If you still use `0.4.4`, update the plugin to use these tools and the `/why` command. For standalone history queries, see [Why layer: CLI and MCP](./why-layer).
 
 | Tool / command | Parameters | Purpose |
 |---|---|---|
