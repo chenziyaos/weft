@@ -92,7 +92,9 @@ try {
   const committed = await waitDisk(id, s => s?.nodes?.some(n => n.id === 'synthetic-note'), '03-applied');
   const backups = committed.filter(r => String(r.key).startsWith('weft:workspace-backup:' + id + ':')); await save('03-backups.json', backups);
   await check('Recoverable backup contains original graph/envelope and new graph', backups.length === 1 && backups[0].value.originalGraph.nodes.length === 2 && backups[0].value.originalEnvelope.state.nodes.length === 2 && backups[0].value.nextEnvelope.state.nodes.length === 3, { keys: backups.map(r => r.key) });
-  await check('Apply does not create a new project entry', equal(initialIndex, committed.find(r => r.key === 'weft:projects')?.value));
+  // Same projects and active project; updatedAt legitimately moves when the edit is saved.
+  const projectIds = (index) => ({ ids: index?.projects?.map(p => p.id), activeId: index?.activeId });
+  await check('Apply does not create a new project entry', equal(projectIds(initialIndex), projectIds(committed.find(r => r.key === 'weft:projects')?.value)));
   stage = 'reload-replay'; await page.reload(); await page.locator('.react-flow__node[data-id="synthetic-note"]').waitFor(); const reloaded = await exportGraph('04-reloaded'); await check('Reload preserves applied graph and project', equal(graphView(applied), graphView(reloaded))); await capture('04-reloaded');
   await page.getByTestId('workspace-import').setInputFiles(happy.edited); await page.getByTestId('workspace-status').filter({ hasText: 'ALREADY_APPLIED' }).waitFor(); await capture('05-already-applied'); const replay = await exportGraph('05-replay'); await check('Second import is ALREADY_APPLIED with no graph mutation', equal(graphView(reloaded), graphView(replay)) && (await rows()).filter(r => String(r.key).startsWith('weft:workspace-backup:' + id + ':')).length === 1);
   stage = 'native-export-workspace-roundtrip';
