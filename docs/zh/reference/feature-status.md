@@ -16,7 +16,7 @@ title: 功能状态
 | 增量会话镜像与 tool result 附件 | 当前功能 | 整理镜像不改写来源历史 |
 | Why 层 CLI 与只读 MCP | 已发布，实验性 | 候选解释不等于已核验的原因 |
 | Harness 内嵌画布与 Agent 轮次 | 插件 0.5.3 已发布 | 普通模型回答仅留画布；Agent 方式执行并记录真实轮次 |
-| Harness 原生 why 工具与 /why | 已在 dsh-weft@0.5.3 中发布 | — |
+| Harness 原生 why 工具与 /why | dsh-weft 0.5.3 及以后的版本包含 | — |
 | Context Bundle v0 | 实验性提案 | 可运行 fixture 不等于兼容标准已冻结 |
 | 自动多 Agent 调度 | 不属于当前承诺 | 不应暗示对话地图会调度 Agent |
 | 改写原始 Agent 会话的已有历史 | 不支持 | 通过 Harness 追加新轮次，不等于改写旧日志 |

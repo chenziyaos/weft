@@ -14,6 +14,26 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
   `npx weft-canvas@<version> mcp`, so it needs no npm download and no
   published version.
 
+## [v0.5.17] - 2026-11-19
+
+First desktop release of this fork. Desktop releases are tagged
+`v<version>` after `desktop/package.json`; the canvas inside is the web app at
+the tagged commit.
+
+### Added
+
+- Installers: macOS `.dmg` and `.zip` for Apple silicon (`arm64`) and Intel,
+  a Windows x64 installer, and a Linux x64 `.AppImage`.
+- `dsh-weft-<version>.tgz`, the DeepSeek Harness plugin, attached to the
+  release; `dsh plugin add` accepts its URL.
+
+### Known limitations
+
+- All builds are unsigned. On macOS the app is ad-hoc signed and not
+  notarized: allow the first launch under System Settings → Privacy &
+  Security → Open Anyway, and download later versions from Releases, since
+  in-app updates may not install. Windows SmartScreen asks once.
+
 ## [cli-v0.5.1] - 2026-11-19
 
 ### Added
