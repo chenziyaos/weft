@@ -65,7 +65,7 @@
     "highlight.js": "^11.12.0",
     "html-to-image": "^1.11.13",
     "idb-keyval": "^6.3.0",
-    "katex": "^0.16.47",
+    "katex": "^0.19.1",
     "lucide-react": "^1.75.0",
     "mammoth": "^1.13.0",
     "pdfjs-dist": "^4.10.38",
@@ -80,7 +80,7 @@
     "remark-math": "^6.0.0",
     "tailwindcss": "^4.1.18",
     "turndown": "^7.2.5",
-    "zhipu-ai-provider": "^0.3.1",
+    "zhipu-ai-provider": "^0.4.0",
     "zustand": "^5.1.0"
   },
   "devDependencies": {
@@ -94,7 +94,7 @@
     "ajv-formats": "^3.0.1",
     "eslint": "^9.39.5",
     "eslint-plugin-react-hooks": "~7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.26",
+    "eslint-plugin-react-refresh": "^0.5.8",
     "globals": "^16.5.0",
     "parse5": "^7.3.0",
     "playwright-core": "^1.65.1",
