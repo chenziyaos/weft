@@ -2,13 +2,14 @@
 // Generate the Claude Code / Codex plugin under plugins/weft/ and the
 // marketplace file that lists it, from the same sources the CLI package
 // ships: the weft-canvas Skill with its two host scripts, the /weft command
-// (Claude Code) and the $weft skill (Codex). The MCP server is the published
-// npm package at the CLI's version, so the plugin carries no server code.
+// (Claude Code) and the $weft skill (Codex). The MCP server is the CLI bundle
+// itself (cli/dist/weft.mjs, self-contained, ~0.3 MB), run as `weft mcp`, so
+// the plugin works without downloading the npm package.
 //
 //   node scripts/build-plugin.mjs           write plugins/weft and .claude-plugin/marketplace.json
 //   node scripts/build-plugin.mjs --check   exit 1 if the committed copy differs (CI)
 //
-// Prerequisite: npm run host:build (host-dist/).
+// Prerequisite: npm run cli:build and host:build (cli/dist/, host-dist/).
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -24,7 +25,9 @@ const description = 'Open the current session on the Weft canvas (/weft), query 
 const keywords = ['canvas', 'context-engineering', 'session-history', 'mcp'];
 const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
 
-const mcp = { mcpServers: { weft: { command: 'npx', args: ['-y', `weft-canvas@${version}`, 'mcp'] } } };
+// Claude Code substitutes ${CLAUDE_PLUGIN_ROOT}; Codex resolves ./ paths against cwd ".", the plugin root.
+const claudeMcp = { weft: { command: 'node', args: ['${CLAUDE_PLUGIN_ROOT}/server/weft.mjs', 'mcp'] } };
+const codexMcp = { mcpServers: { weft: { command: 'node', args: ['./server/weft.mjs', 'mcp'], cwd: '.' } } };
 
 // path inside the repository → contents
 const files = new Map();
@@ -37,15 +40,17 @@ copy('LICENSE', 'skills/weft-canvas/LICENSE');
 copy('LICENSE', 'LICENSE');
 copy('protocol/adapters/claude-code/weft.md', 'commands/weft.md');
 copy('protocol/adapters/codex/skills/weft/SKILL.md', 'codex-skills/weft/SKILL.md');
-files.set(`${plugin}/.mcp.json`, json(mcp));
+copy('cli/dist/weft.mjs', 'server/weft.mjs');
+files.set(`${plugin}/codex-mcp.json`, json(codexMcp));
 files.set(`${plugin}/.claude-plugin/plugin.json`, json({
   name: 'weft', displayName: 'Weft', version, description, author, homepage: 'https://chenziyaos.github.io/weft/', repository, license: 'MIT', keywords,
+  mcpServers: claudeMcp,
 }));
 // Codex reads skills from the listed directories only: the shared canvas skill plus $weft.
 files.set(`${plugin}/.codex-plugin/plugin.json`, json({
   name: 'weft', version, description, author, homepage: 'https://chenziyaos.github.io/weft/', repository, license: 'MIT', keywords,
   skills: ['./skills/', './codex-skills/'],
-  mcpServers: './.mcp.json',
+  mcpServers: './codex-mcp.json',
   interface: { displayName: 'Weft', shortDescription: 'Session history and canvas handoff for coding agents', developerName: 'chenziyaos', category: 'Developer Tools', capabilities: ['Interactive', 'Read', 'Write'], websiteURL: 'https://chenziyaos.github.io/weft/' },
 }));
 files.set('.claude-plugin/marketplace.json', json({

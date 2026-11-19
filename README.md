@@ -59,7 +59,7 @@ weft serve                               # serves the canvas on http://localhost
 
 `npx weft-canvas serve` runs it once without a global install. Canvases are saved in the browser (IndexedDB), so open the same address each time.
 
-**As a Claude Code or Codex plugin.** The plugin adds the session command (`/weft:weft` in Claude Code, the `weft` Skill in Codex), the `weft-canvas` Skill and the read-only MCP server, which runs through `npx weft-canvas mcp`. It does not include the canvas app; start that with `weft serve` or the desktop app. `--sparse` keeps the checkout to the plugin files instead of the whole repository.
+**As a Claude Code or Codex plugin.** The plugin adds the session command (`/weft:weft` in Claude Code, the `weft` Skill in Codex), the `weft-canvas` Skill and the read-only MCP server, which runs from the CLI bundled in the plugin (about 0.3 MB; nothing is downloaded from npm). It does not include the canvas app; start that with `weft serve` or the desktop app. `--sparse` keeps the checkout to the plugin files instead of the whole repository.
 
 ```bash
 claude plugin marketplace add chenziyaos/weft --sparse .claude-plugin plugins
