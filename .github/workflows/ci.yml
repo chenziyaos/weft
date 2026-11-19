@@ -31,3 +31,5 @@ jobs:
       - run: npm run lint
       - run: npm run build
       - run: npm test
+      # plugins/weft is generated from the Skill, the agent commands and the CLI version
+      - run: node scripts/build-plugin.mjs --check

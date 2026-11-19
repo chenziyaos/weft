@@ -29,7 +29,7 @@ description: 把当前 Claude Code 会话在 Weft 中打开（桌面版直连；
 
 1. `command -v weft` — 有则直接用
 2. 本仓开发者：`node cli/dist/weft.mjs`（`cli/dist` 缺失时先 `npm run cli:build`）
-3. 建议用户从源码安装（见仓库 README）
+3. 都没有：`npx -y weft-canvas <参数>`（首次下载约 16 MB），并建议用户 `npm install -g weft-canvas`
 
 ```bash
 weft why --check src/lib/api.ts  # 一行：有没有历史（exit 0 有 / 1 无），改文件前先问
@@ -66,7 +66,7 @@ weft status                      # 索引里有什么、多少是确定证据
 
    在本机起（或复用）Weft 服务并在浏览器打开这个会话；会话文件由本地服务直接读取，不复制。退出码 0 = 成功，画布路由同 (2)，页面开着画布持续跟随（`weft stop` 关掉 `weft open` 起的服务）。**不要打印或总结会话内容。**
 
-4. **再回退（没有 `weft` 命令）——本机桥。** 提一句从源码安装 Weft 下次就能走 (2)，然后：
+4. **再回退（没有 `weft` 命令）——本机桥。** 提一句 `npm install -g weft-canvas` 后下次就能走 (3)，然后：
 
    ① 把会话 JSONL **复制**到 `~/Desktop/weft-session-$(date +%Y%m%d-%H%M).jsonl`（绝不改源文件）
    ② 清残留 `lsof -ti :38017 | xargs kill 2>/dev/null`，再以快照路径为 `TD_SNAP` 后台运行（`nohup … >/dev/null 2>&1 &`）：

@@ -39,6 +39,7 @@
     "host:build": "esbuild scripts/host-handoff.ts --bundle --platform=node --format=esm --target=node20 --outfile=host-dist/host-handoff.mjs && npm run graph:build",
     "serve:build": "esbuild server.mjs --bundle --platform=node --format=esm --target=node20 --outfile=cli/app/server.mjs --log-level=warning --banner:js=\"import { createRequire as __weftRequire } from 'node:module'; const require = __weftRequire(import.meta.url);\"",
     "host:install": "node scripts/install-skill.mjs",
+    "plugin:build": "node scripts/build-plugin.mjs",
     "build:offline": "vite build --base=./",
     "dsh:build": "node dsh/scripts/build.mjs .",
     "test:live-log": "node scripts/test-live-log.mjs",

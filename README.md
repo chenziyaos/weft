@@ -59,6 +59,16 @@ weft serve                               # serves the canvas on http://localhost
 
 `npx weft-canvas serve` runs it once without a global install. Canvases are saved in the browser (IndexedDB), so open the same address each time.
 
+**As a Claude Code or Codex plugin.** The plugin adds the session command (`/weft:weft` in Claude Code, the `weft` Skill in Codex), the `weft-canvas` Skill and the read-only MCP server, which runs through `npx weft-canvas mcp`. It does not include the canvas app; start that with `weft serve` or the desktop app. `--sparse` keeps the checkout to the plugin files instead of the whole repository.
+
+```bash
+claude plugin marketplace add chenziyaos/weft --sparse .claude-plugin plugins
+claude plugin install weft@weft
+
+codex plugin marketplace add chenziyaos/weft --sparse .claude-plugin --sparse plugins
+codex plugin add weft@weft
+```
+
 ## What it does
 
 **The problem it targets.** Forty turns into an agent session, the model is still

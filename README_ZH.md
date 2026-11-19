@@ -50,6 +50,16 @@ weft serve                               # 在 http://localhost:3001 提供画�
 
 只想跑一次、不全局安装，用 `npx weft-canvas serve`。画布存在浏览器里（IndexedDB），每次请打开同一个地址。
 
+**作为 Claude Code 或 Codex 插件安装。** 插件包含会话命令（Claude Code 里是 `/weft:weft`，Codex 里是 `weft` Skill）、`weft-canvas` Skill 和只读 MCP server（通过 `npx weft-canvas mcp` 运行）。插件不含画布应用，画布仍用 `weft serve` 或桌面版打开。`--sparse` 只检出插件相关的文件，不拉整个仓库。
+
+```bash
+claude plugin marketplace add chenziyaos/weft --sparse .claude-plugin plugins
+claude plugin install weft@weft
+
+codex plugin marketplace add chenziyaos/weft --sparse .claude-plugin --sparse plugins
+codex plugin add weft@weft
+```
+
 ## 能做什么
 
 **针对的问题。** Agent 任务聊到第四十轮，模型还在追一个第八轮就被推翻的假设，因为每一轮新提问都会把之前所有轮次重读一遍。新开窗口重讲，会丢掉一路攒下的证据；自动压缩会丢信息，却不告诉你丢了哪些。在 Weft 里，下一轮的输入是一组看得见、剪得断、接得回的连线。

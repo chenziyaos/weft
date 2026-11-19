@@ -1,0 +1,19 @@
+{
+  "name": "weft",
+  "displayName": "Weft",
+  "version": "0.5.0",
+  "description": "Open the current session on the Weft canvas (/weft), query local session history (why / find / recall), and let the agent branch, cite and write back on a live canvas (weft-canvas skill). MCP: the read-only why layer.",
+  "author": {
+    "name": "chenziyaos",
+    "url": "https://github.com/chenziyaos"
+  },
+  "homepage": "https://chenziyaos.github.io/weft/",
+  "repository": "https://github.com/chenziyaos/weft",
+  "license": "MIT",
+  "keywords": [
+    "canvas",
+    "context-engineering",
+    "session-history",
+    "mcp"
+  ]
+}

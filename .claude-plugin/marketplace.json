@@ -1,0 +1,16 @@
+{
+  "name": "weft",
+  "owner": {
+    "name": "chenziyaos",
+    "url": "https://github.com/chenziyaos"
+  },
+  "description": "Weft plugins for Claude Code and Codex",
+  "plugins": [
+    {
+      "name": "weft",
+      "source": "./plugins/weft",
+      "description": "Open the current session on the Weft canvas (/weft), query local session history (why / find / recall), and let the agent branch, cite and write back on a live canvas (weft-canvas skill). MCP: the read-only why layer.",
+      "category": "productivity"
+    }
+  ]
+}
