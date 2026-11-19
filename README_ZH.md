@@ -148,6 +148,7 @@ codex plugin add weft@weft
 | 查某个功能 | [功能地图](docs/zh/guides/index.md) · [教程](docs/zh/tutorials/index.md) · [参考](docs/zh/reference/index.md) |
 | CLI、Why 层、MCP | [cli/README.md](cli/README.md) |
 | 设计与验收 | [ARCHITECTURE_ZH.md](ARCHITECTURE_ZH.md) · [VERIFICATION_ZH.md](VERIFICATION_ZH.md) · [DEPLOYING.md](DEPLOYING.md) |
+| 和同类工具的区别 | [COMPARISON_ZH.md](COMPARISON_ZH.md) |
 
 文档可以用 VitePress 带搜索地浏览：`npm run docs:dev`，或看 Pages 工作流发布的 <https://chenziyaos.github.io/weft/docs/zh/>。
 

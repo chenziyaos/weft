@@ -7,6 +7,14 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
 
 ## [Unreleased]
 
+### Added
+
+- `COMPARISON.md` / `COMPARISON_ZH.md`: how Weft differs from
+  episodic-memory, claude-historian-mcp and claude-code-history-viewer, from
+  their READMEs.
+- OpenSSF Scorecard and CodeQL workflows; `glama.json` for the Glama MCP
+  directory.
+
 ### Changed
 
 - The plugin runs its MCP server from the CLI bundle it carries
