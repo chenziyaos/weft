@@ -167,6 +167,7 @@ More in [docs/reference/troubleshooting.md](docs/reference/troubleshooting.md).
 | Look up a feature | [Guide map](docs/guides/index.md) · [Tutorials](docs/tutorials/index.md) · [Reference](docs/reference/index.md) |
 | CLI, why layer, MCP | [cli/README.md](cli/README.md) |
 | Design and acceptance | [ARCHITECTURE.md](ARCHITECTURE.md) · [VERIFICATION.md](VERIFICATION.md) · [DEPLOYING.md](DEPLOYING.md) |
+| How Weft differs from similar tools | [COMPARISON.md](COMPARISON.md) |
 
 The docs render as a VitePress site with search: `npm run docs:dev`, or the
 copy the Pages workflow publishes at <https://chenziyaos.github.io/weft/docs/>.
