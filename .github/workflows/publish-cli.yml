@@ -84,9 +84,10 @@ jobs:
           # ./ matters: npm reads "cli/x.tgz" as the GitHub repository cli/x.tgz
           npm publish "./cli/weft-canvas-${{ steps.meta.outputs.version }}.tgz" --provenance --access public
 
+      # 0.5.1 took about 4 minutes to become readable after the publish.
       - name: Wait for the npm version to be publicly readable
         run: |
-          for attempt in $(seq 1 18); do
+          for attempt in $(seq 1 60); do
             if npm view "weft-canvas@${{ steps.meta.outputs.version }}" version --prefer-online >/dev/null 2>&1; then exit 0; fi
             sleep 10
           done
