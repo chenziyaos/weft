@@ -36,14 +36,17 @@ export default function CanvasChat({ open, onClose, onLocate }: { open: boolean;
   const [busy, setBusy] = useState(false);
   const [focusCleared, setFocusCleared] = useState(false);
   const list = useRef<HTMLDivElement>(null);
-  useEffect(() => { setTurns(loadTurns(projectId)); }, [projectId]);
+  // a project switch swaps the transcript; adjusted while rendering, not in an effect
+  const [turnsProject, setTurnsProject] = useState(projectId);
+  if (turnsProject !== projectId) { setTurnsProject(projectId); setTurns(loadTurns(projectId)); }
   const firstProject = useRef(projectId);
   useEffect(() => { if (projectId !== firstProject.current) { firstProject.current = projectId; if (open) onClose(); } }, [projectId, open, onClose]);
   useEffect(() => { if (open) list.current?.scrollTo({ top: list.current.scrollHeight }); }, [open, turns.length, busy]);
   // a beacon left on by a hover must not outlive the dialog
   useEffect(() => { if (!open) useUiStore.getState().setBeaconNodeId(null); }, [open]);
   // the selection is the focus unless the person set it aside for this question
-  useEffect(() => { setFocusCleared(false); }, [selectedNodeId]);
+  const [focusFor, setFocusFor] = useState(selectedNodeId);
+  if (focusFor !== selectedNodeId) { setFocusFor(selectedNodeId); setFocusCleared(false); }
   const focusId = !focusCleared && selectedNodeId && nodes.some((n) => n.id === selectedNodeId && !n.data.archived) ? selectedNodeId : null;
   const focusNode = focusId ? nodes.find((n) => n.id === focusId) : undefined;
   // numbers are per request; the map of the latest state resolves older turns too (the order is canvas order)

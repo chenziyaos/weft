@@ -250,6 +250,7 @@ export default function ThoughtMapDialog() {
 
   useEffect(() => {
     if (!open) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- every opening starts from a fresh draft
     setStep('image');
     setMapLang(uiLang);
     setCapLang(uiLang);

@@ -108,6 +108,7 @@ function DossierDrawer({ topicId, name, onClose, onChanged, onOpened }: { topicI
     const b = whyBridge(); if (!b) return;
     try { const [dd, all] = await Promise.all([b.dossier(topicId), b.dossiers()]); setD(dd); setSummary(all.find((x) => x.topicId === topicId) ?? null); } catch (e) { setError(msg(e)); }
   }, [topicId]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- loads from the session bridge
   useEffect(() => { void load(); }, [load]);
   const run = async (what: 'build' | 'update' | 'rebuild') => {
     setBusy(what); setError(null);

@@ -1044,7 +1044,7 @@ export default function ThoughtNode({ id, data }: NodeProps<ThoughtNodeType>) {
               <div className="flex items-end gap-2 bg-wash rounded-xl px-4 py-2.5 transition-shadow focus-within:ring-1 focus-within:ring-accent/40">
                 <textarea
                   rows={1}
-                  ref={mention.bindAnchor}
+                  ref={(el) => mention.bindAnchor(el)}
                   value={inputValue}
                   onChange={(e) => {
                     setInputValue(e.target.value);

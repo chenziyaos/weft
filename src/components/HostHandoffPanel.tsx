@@ -87,11 +87,15 @@ export default function HostHandoffPanel() {
   const target = chosenTarget && chosenTarget.projectId === activeId && targets.some((n) => n.id === chosenTarget.id)
     ? chosenTarget.id : defaultTarget;
   const allowStale = staleConsent?.projectId === activeId && staleConsent?.target === target && staleConsent?.host === host;
-  useEffect(() => { setStaleConsent(null); }, [activeId, target, host]);
+  // consent covers one project, target and host; any change drops it (during render, not in an effect)
+  const consentKey = `${activeId}\u0000${target}\u0000${host}`;
+  const [consentFor, setConsentFor] = useState(consentKey);
+  if (consentFor !== consentKey) { setConsentFor(consentKey); setStaleConsent(null); }
   const livePreview = preview && sourceIsCurrent(preview.source)
     && preview.target === target && preview.host === host && preview.bundle.allowStale === allowStale ? preview.bundle : null;
   const liveStatus = status && sourceIsCurrent(status.source) ? status.value : null;
   const liveWorkspacePreview = workspacePreview && sourceIsCurrent(workspacePreview.source)
+    // eslint-disable-next-line react-hooks/refs -- store subscriptions bump the revision outside React; a stale preview must not render meanwhile
     && workspacePreview.fileRevision === fileRevision.current ? workspacePreview : null;
   const locked = busy !== null || switching;
 

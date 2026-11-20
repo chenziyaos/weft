@@ -221,7 +221,7 @@ export default function SessionAtlas({ onClose, onSwitched, focusSessionId, init
     } finally { setScanning(false); }
   };
   // one scan on mount; refresh is recreated per render and must not re-run the scan
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/set-state-in-effect -- loads from the session bridge
   useEffect(() => { void refresh(); }, []);
 
   // live freshness: the watcher (live-mirror) broadcasts store changes;

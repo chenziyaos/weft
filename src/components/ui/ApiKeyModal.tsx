@@ -25,6 +25,7 @@ export default function ApiKeyModal() {
   const setOpen = useUiStore((s) => s.setApiKeyModalOpen);
   const data = useModels();
   const [providers, setProviders] = useState<RuntimeProvider[]>(() => storedProviders());
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- re-reads saved providers each time the dialog opens
   useEffect(() => { if (open) setProviders(storedProviders()); }, [open]);
   // The judge is not on the interfaces screen: it is the step after an interface is added
   // (a card that appears once, right then), or its own view when the picker's judge row or the
@@ -33,30 +34,11 @@ export default function ApiKeyModal() {
   const judgeCfg = useUiStore((s) => s.judge);
   const [judgeView, setJudgeView] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- each opening lands on the section that asked for it
   useEffect(() => { if (open) { setJudgeView(section === 'judge'); setJustAdded(false); } }, [open, section]);
   const [adding, setAdding] = useState(false);
-  // Landing quick-connect: open straight onto the recommended preset
   const presetHint = useUiStore((s) => s.apiKeyPresetHint);
-  useEffect(() => {
-    if (!open || !presetHint) return;
-    const p = PROVIDER_PRESETS.find((x) => x.id === presetHint);
-    if (p) { setAdding(true); setPreset(p); setProbed(null); setPicked(new Map()); }
-    useUiStore.getState().setApiKeyPresetHint(null);
-  }, [open, presetHint]);
-  // OAuth pickup: a freshly minted key opens the model-picking view — key
-  // filled, catalog probed, recommended set pre-checked. The USER saves;
-  // nothing is registered on their behalf.
   const mintedKey = useUiStore((s) => s.oauthMintedKey);
-  useEffect(() => {
-    if (!open || !mintedKey) return;
-    useUiStore.getState().setOauthMintedKey(null);
-    const p = PROVIDER_PRESETS.find((x) => x.id === 'openrouter')!;
-    setAdding(true);
-    setPreset(p);
-    setKey(mintedKey);
-    void doProbe(p.baseURL, mintedKey, undefined, true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, mintedKey]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -86,6 +68,89 @@ export default function ApiKeyModal() {
     [data, providers],
   );
   const visionCount = (data?.models ?? []).filter((m) => m.vision).length;
+
+  // Defined before the effects below, which call it; a plain function, re-created per render.
+  const doProbe = async (baseURLArg?: string, keyArg?: string, keepPicked?: RuntimeModel[], preferRecommend?: boolean) => {
+    setBusy(true);
+    setError('');
+    setProbed(null);
+    try {
+      const baseURL = baseURLArg ?? (preset.id === 'custom' ? customURL.trim() : preset.baseURL);
+      // derived from the URL, not the preset state — the refresh flow calls
+      // in before its setPreset() has landed
+      const presetMeta = PROVIDER_PRESETS.find((x) => x.baseURL === baseURL);
+      // fixed-catalog endpoints (no /models route) list from the preset
+      const fixed = presetMeta?.fixedModels;
+      const models: RuntimeModel[] = fixed ? fixed.map((id) => ({ id })) : await probeModels(baseURL, (keyArg ?? key).trim());
+      if (models.length === 0) throw new Error(t('provider.probeEmpty'));
+      // A /models route is not always the whole catalog (bigmodel omits
+      // glm-4v-flash, its own vision flash). Recommended ids join the
+      // browsable list, and already-picked models missing from it survive a
+      // refresh instead of silently vanishing.
+      if (!fixed) {
+        for (const id of presetMeta?.recommend ?? []) {
+          if (!models.some((m) => m.id === id)) models.push({ id, ...(guessVision(id) ? { vision: true } : {}) });
+        }
+      }
+      for (const m of keepPicked ?? []) {
+        if (!models.some((x) => x.id === m.id)) models.push({ ...m });
+      }
+      const preselect = new Map<string, boolean>();
+      const recHits = preferRecommend
+        ? models.filter((m) => new Set(presetMeta?.recommend ?? []).has(m.id))
+        : [];
+      if (keepPicked) {
+        // refresh flow: your current picks stay checked; everything the
+        // provider newly lists is visible right here, unchecked
+        const listed = new Set(models.map((m) => m.id));
+        for (const m of keepPicked) if (listed.has(m.id)) {
+          preselect.set(m.id, models.find((x) => x.id === m.id)?.vision ?? !!m.vision);
+        }
+      } else if (recHits.length > 0) {
+        // OAuth pickup: the preset's recommended set leads, not raw recency
+        recHits.forEach((m) => preselect.set(m.id, !!m.vision));
+      } else if (models.some((m) => m.created)) {
+        // release times available: preselect the newest 8
+        [...models].sort((a, b) => (b.created ?? 0) - (a.created ?? 0)).slice(0, 8)
+          .forEach((m) => preselect.set(m.id, !!m.vision));
+      } else {
+        const rec = new Set(preset.recommend ?? []);
+        for (const m of models) {
+          if (rec.size > 0 ? rec.has(m.id) : models.length <= 12) preselect.set(m.id, !!m.vision);
+        }
+      }
+      setPicked(preselect);
+      setInitialPicked(new Set(preselect.keys()));
+      setProbed(models);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // Landing quick-connect: open straight onto the recommended preset
+  useEffect(() => {
+    if (!open || !presetHint) return;
+    const p = PROVIDER_PRESETS.find((x) => x.id === presetHint);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- consumes a one-shot hint from the UI store
+    if (p) { setAdding(true); setPreset(p); setProbed(null); setPicked(new Map()); }
+    useUiStore.getState().setApiKeyPresetHint(null);
+  }, [open, presetHint]);
+  // OAuth pickup: a freshly minted key opens the model-picking view — key
+  // filled, catalog probed, recommended set pre-checked. The USER saves;
+  // nothing is registered on their behalf.
+  useEffect(() => {
+    if (!open || !mintedKey) return;
+    useUiStore.getState().setOauthMintedKey(null);
+    const p = PROVIDER_PRESETS.find((x) => x.id === 'openrouter')!;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- consumes a one-shot key from the OAuth callback
+    setAdding(true);
+    setPreset(p);
+    setKey(mintedKey);
+    void doProbe(p.baseURL, mintedKey, undefined, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, mintedKey]);
 
   if (!open) return null;
 
@@ -126,65 +191,6 @@ export default function ApiKeyModal() {
     await doProbe(p.baseURL, p.apiKey, p.models);
   };
 
-
-  const doProbe = async (baseURLArg?: string, keyArg?: string, keepPicked?: RuntimeModel[], preferRecommend?: boolean) => {
-    setBusy(true);
-    setError('');
-    setProbed(null);
-    try {
-      const baseURL = baseURLArg ?? (preset.id === 'custom' ? customURL.trim() : preset.baseURL);
-      // derived from the URL, not the preset state — the refresh flow calls
-      // in before its setPreset() has landed
-      const presetMeta = PROVIDER_PRESETS.find((x) => x.baseURL === baseURL);
-      // fixed-catalog endpoints (no /models route) list from the preset
-      const fixed = presetMeta?.fixedModels;
-      const models: RuntimeModel[] = fixed ? fixed.map((id) => ({ id })) : await probeModels(baseURL, (keyArg ?? key).trim());
-      if (models.length === 0) throw new Error(t('provider.probeEmpty'));
-      // A /models route is not always the whole catalog (bigmodel omits
-      // glm-4v-flash, its own vision flash). Recommended ids join the
-      // browsable list, and already-picked models missing from it survive a
-      // refresh instead of silently vanishing.
-      if (!fixed) {
-        for (const id of presetMeta?.recommend ?? []) {
-          if (!models.some((m) => m.id === id)) models.push({ id, ...(guessVision(id) ? { vision: true } : {}) });
-        }
-      }
-      for (const m of keepPicked ?? []) {
-        if (!models.some((x) => x.id === m.id)) models.push({ ...m });
-      }
-      const preselect = new Map<string, boolean>();
-      const recHits = preferRecommend
-        ? models.filter((m) => new Set(preset.recommend ?? []).has(m.id))
-        : [];
-      if (keepPicked) {
-        // refresh flow: your current picks stay checked; everything the
-        // provider newly lists is visible right here, unchecked
-        const listed = new Set(models.map((m) => m.id));
-        for (const m of keepPicked) if (listed.has(m.id)) {
-          preselect.set(m.id, models.find((x) => x.id === m.id)?.vision ?? !!m.vision);
-        }
-      } else if (recHits.length > 0) {
-        // OAuth pickup: the preset's recommended set leads, not raw recency
-        recHits.forEach((m) => preselect.set(m.id, !!m.vision));
-      } else if (models.some((m) => m.created)) {
-        // release times available: preselect the newest 8
-        [...models].sort((a, b) => (b.created ?? 0) - (a.created ?? 0)).slice(0, 8)
-          .forEach((m) => preselect.set(m.id, !!m.vision));
-      } else {
-        const rec = new Set(preset.recommend ?? []);
-        for (const m of models) {
-          if (rec.size > 0 ? rec.has(m.id) : models.length <= 12) preselect.set(m.id, !!m.vision);
-        }
-      }
-      setPicked(preselect);
-      setInitialPicked(new Set(preselect.keys()));
-      setProbed(models);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setBusy(false);
-    }
-  };
 
   const doAdd = async () => {
     // A keyless save on a keyed endpoint would look like success and then

@@ -58,6 +58,7 @@ export default function RelatedSection({ question, answer }: { question: string;
   useEffect(() => {
     if (!open) return;
     const b = whyBridge(); if (!b) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- clears the results of a search that no longer has terms
     if (!terms.length && !picked.length) { setHits([]); return; }
     let alive = true;
     setBusy(true);

@@ -30,6 +30,7 @@ export default function TopicsPanel({ onOpened, onChanged }: { onOpened?: () => 
     const b = whyBridge(); if (!b) return;
     try { setInfo(await b.topics()); } catch (e) { setError(msg(e)); }
   }, []);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- loads from the session bridge
   useEffect(() => { void refresh(); }, [refresh]);
   const running = !!info?.status.running;
   useEffect(() => {

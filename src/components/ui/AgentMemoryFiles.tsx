@@ -20,7 +20,8 @@ export default function AgentMemoryFiles() {
   const selectedNodeId = useStore((s) => s.selectedNodeId);
   const inbox = useUiStore((s) => s.memoryInbox);
   const setInbox = useUiStore((s) => s.setMemoryInbox);
-  const [files, setFiles] = useState<WhyMemoryFile[] | null>(null);
+  // without a bridge there is nothing to list: empty at once rather than loading
+  const [files, setFiles] = useState<WhyMemoryFile[] | null>(() => (whyBridge() ? null : []));
   const [error, setError] = useState<string | null>(null);
   const [openFile, setOpenFile] = useState<string | null>(null);
   const [entries, setEntries] = useState<Record<string, WhyRecalledTurn | 'loading'>>({});
@@ -28,7 +29,7 @@ export default function AgentMemoryFiles() {
 
   useEffect(() => {
     const bridge = whyBridge();
-    if (!bridge) { setFiles([]); return; }
+    if (!bridge) return;
     let alive = true;
     bridge.memories().then((m) => { if (alive) setFiles(m); }).catch((e: unknown) => { if (alive) { setFiles([]); setError(e instanceof Error ? e.message : String(e)); } });
     return () => { alive = false; };
