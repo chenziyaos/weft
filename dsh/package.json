@@ -1,6 +1,6 @@
 {
   "name": "dsh-weft",
-  "version": "0.5.17",
+  "version": "0.5.18",
   "description": "Weft for DeepSeek Harness: turn the current DSH session into an editable thought graph on an infinite canvas. Source, releases and issues: github.com/chenziyaos/weft",
   "author": "Xia Chen",
   "repository": {
