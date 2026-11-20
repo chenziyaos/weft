@@ -41,6 +41,14 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
   ending in `\` no longer breaks the table.
 - `SECURITY.md` lists the CodeQL findings accepted by design and why.
 
+### Security
+
+- Desktop: Electron 43.3.0 → 43.8.12 and `npm audit fix` in
+  `desktop/package-lock.json`, which clears the six high advisories there
+  (Electron sandbox and protocol-handler issues, undici, js-yaml, fast-uri,
+  @xmldom/xmldom, brace-expansion). Six moderate ones remain in
+  electron-builder's own dependencies; npm offers only a downgrade to 25.
+
 ## [v0.5.18] - 2026-11-20
 
 The first desktop release that can update itself: from this version on, the
