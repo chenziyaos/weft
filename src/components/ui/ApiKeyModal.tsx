@@ -97,7 +97,7 @@ export default function ApiKeyModal() {
       }
       const preselect = new Map<string, boolean>();
       const recHits = preferRecommend
-        ? models.filter((m) => new Set(preset.recommend ?? []).has(m.id))
+        ? models.filter((m) => new Set(presetMeta?.recommend ?? []).has(m.id))
         : [];
       if (keepPicked) {
         // refresh flow: your current picks stay checked; everything the
