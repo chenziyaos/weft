@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -33,9 +33,8 @@ import SearchBar from './components/SearchBar';
 import CanvasChat from './components/CanvasChat';
 import { REPO_URL, useGithubStars, formatStars } from './lib/github-stars';
 import DiagnosticsPanel from './components/DiagnosticsPanel';
-import MaterialReader from './components/MaterialReader';
 import ProjectSwitcher from './components/ProjectSwitcher';
-import SessionAtlas from './components/SessionAtlas';
+import SessionAtlas from './components/LazySessionAtlas';
 import { useStore } from './store';
 import { replaySeed } from './lib/stale-judge';
 import { recomputePlan } from './lib/recompute-plan';
@@ -54,7 +53,6 @@ import { buildContext } from './store/context-builder';
 import { exportActiveParadigm, exportActiveProjectJson, exportEventLogCsv } from './lib/export';
 import { exportActiveVault } from './lib/vault-export';
 import { countTokens } from './utils';
-import { buildExampleGraph } from './lib/example-graph';
 import { COLORS, FRAME_COLORS, PANEL_INSET } from './lib/constants';
 import { panelShift } from './lib/panel-shift';
 import { useReaderDock } from './lib/reader-dock';
@@ -67,12 +65,8 @@ import Toaster from './components/ui/Toaster';
 import GlobalTooltip from './components/ui/GlobalTooltip';
 import RoleManagerModal from './components/ui/RoleManagerModal';
 import MemoryManagerModal from './components/ui/MemoryManagerModal';
-import ApiKeyModal from './components/ui/ApiKeyModal';
-import ResponseViewer from './components/ui/ResponseViewer';
 import ShareDialog from './components/ui/ShareDialog';
-import ThoughtMapDialog from './components/ui/ThoughtMapDialog';
 import BackupDialog from './components/ui/BackupDialog';
-import CondenseDialog from './components/ui/CondenseDialog';
 import { backupSupported } from './lib/local-backup';
 import LangSwitch from './components/ui/LangSwitch';
 import ModelPicker from './components/ui/ModelPicker';
@@ -92,6 +86,14 @@ import { useZoomTier } from './lib/use-map-mode';
 import { TimelineBar } from './components/ui/TimelineBar';
 import TimelineOverviewModal from './components/ui/TimelineOverviewModal';
 import { useStore as useRfStore, useReactFlow } from '@xyflow/react';
+import Deferred from './components/Deferred';
+
+// Panels that open on demand load their code on first open (see Deferred).
+const MaterialReader = lazy(() => import('./components/MaterialReader'));
+const ApiKeyModal = lazy(() => import('./components/ui/ApiKeyModal'));
+const ResponseViewer = lazy(() => import('./components/ui/ResponseViewer'));
+const ThoughtMapDialog = lazy(() => import('./components/ui/ThoughtMapDialog'));
+const CondenseDialog = lazy(() => import('./components/ui/CondenseDialog'));
 
 // One node type key, three renderers: content nodes (notes / files) render
 // the same in every mode; otherwise the active project's kind decides
@@ -114,6 +116,9 @@ const edgeTypes = { smoothstep: memo(ThoughtEdgeView) };
 export default function App() {
   const [hydrated, setHydrated] = useState(isViewerMode || useStore.persist.hasHydrated());
   useEffect(() => useStore.persist.onFinishHydration(() => setHydrated(true)), []);
+  const apiKeyModalOpen = useUiStore((s) => s.apiKeyModalOpen);
+  const responseViewerOpen = useUiStore((s) => s.responseViewerNodeId != null);
+  const thoughtMapOpen = useUiStore((s) => s.thoughtMapOpen);
   // Attachment vault: whenever the graph changes (hydration, project
   // switch, seed load, import), lighten any PDF still carrying its bytes
   // inline. The check is one cheap some() pass and the migration itself is
@@ -199,10 +204,10 @@ export default function App() {
       <GlobalTooltip />
       <RoleManagerModal />
       <MemoryManagerModal />
-      <ApiKeyModal />
-      <ResponseViewer />
+      <Deferred when={apiKeyModalOpen}><ApiKeyModal /></Deferred>
+      <Deferred when={responseViewerOpen}><ResponseViewer /></Deferred>
       <ShareDialog />
-      <ThoughtMapDialog />
+      <Deferred when={thoughtMapOpen}><ThoughtMapDialog /></Deferred>
       <BackupDialog />
       <ConfirmDialog />
       <Tutorial />
@@ -220,6 +225,8 @@ function Canvas() {
   const setAnnotationsHidden = useUiStore((s) => s.setAnnotationsHidden);
   const wheelPans = useUiStore((s) => s.wheelPans);
   const setWheelPans = useUiStore((s) => s.setWheelPans);
+  const condenseDialogOpen = useUiStore((s) => s.condenseDialogOpen);
+  const readerOpen = useUiStore((s) => s.readerNodeId != null);
   const [inputValue, setInputValue] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
@@ -305,7 +312,8 @@ function Canvas() {
   const modelData = useModels();
   void modelData;
 
-  const loadExample = useCallback(() => {
+  const loadExample = useCallback(async () => {
+    const { buildExampleGraph } = await import('./lib/example-graph');
     const { nodes: exNodes, edges: exEdges } = buildExampleGraph(lang);
     const st = useStore.getState();
     st.setNodes([...st.nodes, ...exNodes.filter((n) => !st.nodes.some((x) => x.id === n.id))]);
@@ -2160,7 +2168,7 @@ function Canvas() {
 
       {/* Focus Panel — floating overlay on the right; never for orchestration
           or content nodes, which are edited in place on the canvas */}
-      <CondenseDialog onFocusSegment={(ids) => {
+      <Deferred when={condenseDialogOpen}><CondenseDialog onFocusSegment={(ids) => {
         const rf = rfInstance.current;
         // read fresh state: the condensed copy may have been created AFTER
         // this closure captured the render's nodes array
@@ -2171,7 +2179,7 @@ function Canvas() {
         const w = Math.max(...xs) + 520 - x, h = Math.max(...ys) + 240 - y;
         // widen rightwards: the condense panel covers the right edge
         rf.fitBounds({ x, y, width: w + 700, height: h }, { duration: 350, padding: 0.15 });
-      }} />
+      }} /></Deferred>
       {panelOpen && <FocusPanel onFocusNode={(id) => {
         const node = nodes.find(n => n.id === id);
         if (node) centerNode(node, { duration: 300 });
@@ -2179,13 +2187,13 @@ function Canvas() {
 
       {/* Material reading overlay: select a passage, ask, the node lands on
           the canvas immediately (a view onto the material, not a container) */}
-      <MaterialReader onLocate={(id) => {
+      <Deferred when={readerOpen}><MaterialReader onLocate={(id) => {
         const n = useStore.getState().nodes.find((x) => x.id === id);
         if (n) {
           setSelectedNodeId(id);
           centerNode(n, { zoom: 1 });
         }
-      }} />
+      }} /></Deferred>
     </div>
   );
 }

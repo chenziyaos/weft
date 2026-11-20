@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Archive, ChevronDown, Dna, FolderOpen, Loader2, Map as MapIcon, Pencil, Plus, RefreshCw, Trash2, Upload } from 'lucide-react';
-import SessionAtlas from './SessionAtlas';
+import SessionAtlas from './LazySessionAtlas';
 import HarnessViewSwitch from './ui/HarnessViewSwitch';
 import { knownSessionIds } from '../lib/atlas/discover';
 import { useProjects, switchProject, createProject, renameProject, deleteProject, setProjectArchived } from '../store/projects';

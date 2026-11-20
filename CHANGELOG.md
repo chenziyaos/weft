@@ -21,6 +21,10 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
   (`plugins/weft/server/weft.mjs`, about 0.3 MB) instead of
   `npx weft-canvas@<version> mcp`, so it needs no npm download and no
   published version.
+- The session atlas, material reader, thought-map dialog, model-key dialog,
+  condense dialog, response viewer, host handoff panel and example canvas load
+  on first use. The startup chunk drops from 1,187.5 kB (395.3 kB gzip) to
+  880.5 kB (284.8 kB gzip) in `npm run build`.
 
 ### Fixed
 
