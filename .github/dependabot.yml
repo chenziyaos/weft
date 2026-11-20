@@ -25,3 +25,11 @@ updates:
     groups:
       actions:
         patterns: ["*"]
+  # cli/Dockerfile pins node:22-bookworm-slim by digest; this keeps the digest current.
+  - package-ecosystem: docker
+    directory: /cli
+    schedule:
+      interval: monthly
+    ignore:
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]

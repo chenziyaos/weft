@@ -250,7 +250,7 @@ await step('09-multi-model', async () => {
   const chips = page.locator('[data-fanout-models] button');
   const available = await chips.allInnerTexts();
   const picked = COMPARE_MODELS.length ? COMPARE_MODELS.filter((m) => available.includes(m)) : available.slice(0, 3);
-  for (const id of picked) await chips.filter({ hasText: new RegExp(`^${id.replace(/\./g, '\\.')}$`) }).click();
+  for (const id of picked) await chips.filter({ hasText: new RegExp(`^${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`) }).click();
   await shot('09-multi-model-dialog');
   const prev = (await nodes()).length;
   const t0 = Date.now();

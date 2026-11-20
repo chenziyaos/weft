@@ -35,3 +35,22 @@ Out of scope:
 Provider keys entered in the browser stay in that browser's localStorage and in
 the proxy's memory; keys in `.env` stay on your machine. Never paste a key into
 an issue, a pull request or a shared canvas export.
+
+## Code scanning findings accepted by design
+
+CodeQL runs on every pull request. These findings are dismissed as
+"won't fix", each for the reason given here:
+
+- **Request forgery in `server.mjs`** (`/api/judge`, `/api/probe-models`, link
+  fetching): the proxy exists to forward requests to the endpoints you
+  configure. It listens on loopback only, CORS admits only the desktop origin
+  and localhost dev ports, and link fetching refuses private addresses on
+  every redirect hop.
+- **Clear-text key storage** in `src/lib/runtime-providers.ts`: provider keys
+  live in the browser's localStorage, as described under "Handling secrets".
+  There is no server-side account to keep them in.
+- **Missing rate limiting** on `server.mjs` routes: the proxy serves one person
+  on their own machine.
+- **Sensitive data in a GET query** on `/oauth/openrouter`: OAuth redirects
+  deliver the one-time code in the query string; the route keeps it in memory
+  until the app reads it once.

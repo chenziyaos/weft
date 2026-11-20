@@ -22,7 +22,7 @@ export const UPDATE_TURNS = 60;
 export const AUTO_MERGE_PENDING = 6;
 const CONTEXT_CAP_CHARS = 3200;
 
-const when = (at: string | null | undefined): string => (at ? at.slice(5, 10).replace('-', '-') : '');
+const when = (at: string | null | undefined): string => (at ? at.slice(5, 10) : '');
 const sourceTag = (d: WhyDossier, key: string): string => { const s = d.sources[key]; return s ? `${s.runner} ${when(s.at)}` : ''; };
 
 /** The document as markdown: for the context block and the panel. */

@@ -69,7 +69,8 @@ export function spawnContentNode(
 export function clipboardTextToMarkdown(text: string): string {
   const lines = text.replace(/\r\n?/g, '\n').split('\n').filter((l) => l.trim() !== '');
   if (lines.length >= 2 && lines.every((l) => l.includes('\t'))) {
-    const rows = lines.map((l) => l.split('\t').map((c) => c.trim().replace(/\|/g, '\\|')));
+    // backslashes first, so a cell ending in \ cannot swallow the pipe escape
+    const rows = lines.map((l) => l.split('\t').map((c) => c.trim().replace(/\\/g, '\\\\').replace(/\|/g, '\\|')));
     const cols = Math.max(...rows.map((r) => r.length));
     const pad = (r: string[]) => [...r, ...Array(cols - r.length).fill('')];
     const [head, ...body] = rows.map(pad);
