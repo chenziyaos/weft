@@ -14,10 +14,6 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
-      # 7.1 turns on React Compiler rules that flag 28 existing call sites;
-      # upgrading it is a code change, not a dependency bump.
-      - dependency-name: eslint-plugin-react-hooks
-        update-types: ["version-update:semver-minor"]
       # rehype-katex renders with its own katex ^0.16; the top-level copy
       # only supplies the stylesheet and must stay on the same minor.
       - dependency-name: katex

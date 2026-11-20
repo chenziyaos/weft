@@ -21,6 +21,12 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
   (`plugins/weft/server/weft.mjs`, about 0.3 MB) instead of
   `npx weft-canvas@<version> mcp`, so it needs no npm download and no
   published version.
+- `eslint-plugin-react-hooks` 7.1 and its React Compiler rules. Of the 28
+  errors they raised, 14 are fixed in code (state reset during render instead
+  of in an effect, a ref read replaced by state, effects moved below the
+  function they call); the other 14 carry a one-line `eslint-disable` with the
+  reason, mostly effects that load from a bridge or reset a dialog when it
+  opens.
 
 ## [v0.5.17] - 2026-11-19
 

@@ -175,6 +175,7 @@ export default function Tutorial() {
 
   useEffect(() => {
     if (!open) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- every opening starts at the first slide
     setPage(0);
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') setPage((p) => Math.min(p + 1, SLIDES.length - 1));

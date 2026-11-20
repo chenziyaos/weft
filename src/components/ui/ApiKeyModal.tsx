@@ -25,6 +25,7 @@ export default function ApiKeyModal() {
   const setOpen = useUiStore((s) => s.setApiKeyModalOpen);
   const data = useModels();
   const [providers, setProviders] = useState<RuntimeProvider[]>(() => storedProviders());
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- re-reads saved providers each time the dialog opens
   useEffect(() => { if (open) setProviders(storedProviders()); }, [open]);
   // The judge is not on the interfaces screen: it is the step after an interface is added
   // (a card that appears once, right then), or its own view when the picker's judge row or the
@@ -33,30 +34,11 @@ export default function ApiKeyModal() {
   const judgeCfg = useUiStore((s) => s.judge);
   const [judgeView, setJudgeView] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- each opening lands on the section that asked for it
   useEffect(() => { if (open) { setJudgeView(section === 'judge'); setJustAdded(false); } }, [open, section]);
   const [adding, setAdding] = useState(false);
-  // Landing quick-connect: open straight onto the recommended preset
   const presetHint = useUiStore((s) => s.apiKeyPresetHint);
-  useEffect(() => {
-    if (!open || !presetHint) return;
-    const p = PROVIDER_PRESETS.find((x) => x.id === presetHint);
-    if (p) { setAdding(true); setPreset(p); setProbed(null); setPicked(new Map()); }
-    useUiStore.getState().setApiKeyPresetHint(null);
-  }, [open, presetHint]);
-  // OAuth pickup: a freshly minted key opens the model-picking view — key
-  // filled, catalog probed, recommended set pre-checked. The USER saves;
-  // nothing is registered on their behalf.
   const mintedKey = useUiStore((s) => s.oauthMintedKey);
-  useEffect(() => {
-    if (!open || !mintedKey) return;
-    useUiStore.getState().setOauthMintedKey(null);
-    const p = PROVIDER_PRESETS.find((x) => x.id === 'openrouter')!;
-    setAdding(true);
-    setPreset(p);
-    setKey(mintedKey);
-    void doProbe(p.baseURL, mintedKey, undefined, true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, mintedKey]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -87,46 +69,7 @@ export default function ApiKeyModal() {
   );
   const visionCount = (data?.models ?? []).filter((m) => m.vision).length;
 
-  if (!open) return null;
-
-  const resetAdd = () => {
-    setAdding(false); setProbed(null); setPicked(new Map()); setKey(''); setCustomURL(''); setCustomName(''); setFilter(''); setError('');
-  };
-
-  const commit = async (next: RuntimeProvider[]) => {
-    setBusy(true);
-    setError('');
-    try {
-      const fresh = await pushProviders(next);
-      saveProviders(next);
-      setProviders(next);
-      setModelsCache(fresh);
-      return true;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-      return false;
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  // One-click re-probe: keeps your picked models, updates vision metadata,
-  // drops delisted ids, and — for providers with small catalogs — adopts
-  // newly listed models automatically. Huge catalogs (gateways) stay on the
-  // picked+recommended whitelist; use Add to browse their new arrivals.
-  const refresh = async (p: RuntimeProvider) => {
-    // Same-URL region twins exist (ChatGPT bridge, Kimi Code): prefer the
-    // twin matching the UI language so the visible chip row highlights.
-    const match = PROVIDER_PRESETS.find((x) => x.baseURL === p.baseURL && (!x.region || x.region === lang))
-      ?? PROVIDER_PRESETS.find((x) => x.baseURL === p.baseURL);
-    setPreset(match ?? PROVIDER_PRESETS.find((x) => x.id === 'custom')!);
-    if (!match) { setCustomURL(p.baseURL); setCustomName(p.name); }
-    setKey(p.apiKey);
-    setAdding(true);
-    await doProbe(p.baseURL, p.apiKey, p.models);
-  };
-
-
+  // Defined before the effects below, which call it; a plain function, re-created per render.
   const doProbe = async (baseURLArg?: string, keyArg?: string, keepPicked?: RuntimeModel[], preferRecommend?: boolean) => {
     setBusy(true);
     setError('');
@@ -185,6 +128,69 @@ export default function ApiKeyModal() {
       setBusy(false);
     }
   };
+
+  // Landing quick-connect: open straight onto the recommended preset
+  useEffect(() => {
+    if (!open || !presetHint) return;
+    const p = PROVIDER_PRESETS.find((x) => x.id === presetHint);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- consumes a one-shot hint from the UI store
+    if (p) { setAdding(true); setPreset(p); setProbed(null); setPicked(new Map()); }
+    useUiStore.getState().setApiKeyPresetHint(null);
+  }, [open, presetHint]);
+  // OAuth pickup: a freshly minted key opens the model-picking view — key
+  // filled, catalog probed, recommended set pre-checked. The USER saves;
+  // nothing is registered on their behalf.
+  useEffect(() => {
+    if (!open || !mintedKey) return;
+    useUiStore.getState().setOauthMintedKey(null);
+    const p = PROVIDER_PRESETS.find((x) => x.id === 'openrouter')!;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- consumes a one-shot key from the OAuth callback
+    setAdding(true);
+    setPreset(p);
+    setKey(mintedKey);
+    void doProbe(p.baseURL, mintedKey, undefined, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, mintedKey]);
+
+  if (!open) return null;
+
+  const resetAdd = () => {
+    setAdding(false); setProbed(null); setPicked(new Map()); setKey(''); setCustomURL(''); setCustomName(''); setFilter(''); setError('');
+  };
+
+  const commit = async (next: RuntimeProvider[]) => {
+    setBusy(true);
+    setError('');
+    try {
+      const fresh = await pushProviders(next);
+      saveProviders(next);
+      setProviders(next);
+      setModelsCache(fresh);
+      return true;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+      return false;
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // One-click re-probe: keeps your picked models, updates vision metadata,
+  // drops delisted ids, and — for providers with small catalogs — adopts
+  // newly listed models automatically. Huge catalogs (gateways) stay on the
+  // picked+recommended whitelist; use Add to browse their new arrivals.
+  const refresh = async (p: RuntimeProvider) => {
+    // Same-URL region twins exist (ChatGPT bridge, Kimi Code): prefer the
+    // twin matching the UI language so the visible chip row highlights.
+    const match = PROVIDER_PRESETS.find((x) => x.baseURL === p.baseURL && (!x.region || x.region === lang))
+      ?? PROVIDER_PRESETS.find((x) => x.baseURL === p.baseURL);
+    setPreset(match ?? PROVIDER_PRESETS.find((x) => x.id === 'custom')!);
+    if (!match) { setCustomURL(p.baseURL); setCustomName(p.name); }
+    setKey(p.apiKey);
+    setAdding(true);
+    await doProbe(p.baseURL, p.apiKey, p.models);
+  };
+
 
   const doAdd = async () => {
     // A keyless save on a keyed endpoint would look like success and then

@@ -312,8 +312,8 @@ function ReaderOverlay({ node, onLocate, dock }: { node: ThoughtNode; onLocate: 
   // continuations) — a live view of canvas nodes, never a separate store.
   // A canvas p.N chip can pre-address the landing: open on that thread,
   // scroll to that page (one-shot; consumed here so reopen starts clean).
-  const jumpRef = useRef(useUiStore.getState().readerJump);
-  const [threadId, setThreadId] = useState<string | null>(jumpRef.current?.threadId ?? null);
+  const [mountJump] = useState(() => useUiStore.getState().readerJump);
+  const [threadId, setThreadId] = useState<string | null>(mountJump?.threadId ?? null);
   useEffect(() => {
     if (useUiStore.getState().readerJump) useUiStore.setState({ readerJump: null });
   }, []);
@@ -625,10 +625,8 @@ function ReaderOverlay({ node, onLocate, dock }: { node: ThoughtNode; onLocate: 
     }
     return chain;
   }, [threadId, nodes, edges]);
-  useEffect(() => {
-    // the thread's node can be deleted from the canvas while the rail shows it
-    if (threadId && thread.length === 0) setThreadId(null);
-  }, [threadId, thread.length]);
+  // the thread's node can be deleted from the canvas while the rail shows it
+  if (threadId && thread.length === 0) setThreadId(null);
 
   const [followDraft, setFollowDraft] = useState('');
   const submitFollow = () => {
@@ -662,7 +660,7 @@ function ReaderOverlay({ node, onLocate, dock }: { node: ThoughtNode; onLocate: 
   // (page holders mount with the document; sections mount immediately).
   // Claims scrollRestored — an explicit destination beats session memory.
   useEffect(() => {
-    const page = jumpRef.current?.page;
+    const page = mountJump?.page;
     if (!page) return;
     scrollRestored.current = true;
     let tries = 0;
@@ -672,15 +670,16 @@ function ReaderOverlay({ node, onLocate, dock }: { node: ThoughtNode; onLocate: 
       if (++tries < 25) window.setTimeout(attempt, 100);
     };
     window.setTimeout(attempt, 150);
-  }, [doc]);
+  }, [doc, mountJump]);
 
   // a later landing while this material stays open (a p.N chip on the canvas,
   // a node selected beside the docked reader): scroll there now. The mount-time
-  // jump is the object jumpRef captured; anything else is new.
+  // jump is the object mountJump captured; anything else is new.
   const laterJump = useUiStore((s) => s.readerJump);
   useEffect(() => {
-    if (!laterJump || laterJump === jumpRef.current) return;
+    if (!laterJump || laterJump === mountJump) return;
     useUiStore.setState({ readerJump: null });
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- consumes a one-shot request from the UI store
     if (laterJump.threadId) setThreadId(laterJump.threadId);
     const page = laterJump.page;
     if (!page) return;
@@ -691,7 +690,7 @@ function ReaderOverlay({ node, onLocate, dock }: { node: ThoughtNode; onLocate: 
       if (++tries < 25) window.setTimeout(attempt, 100);
     };
     window.setTimeout(attempt, 50);
-  }, [laterJump]);
+  }, [laterJump, mountJump]);
 
   // the reading column's width, measured: PDF pages are rendered to fit it
   // (the docked column is as wide as you dragged it; the overlay's body

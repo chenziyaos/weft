@@ -35,6 +35,7 @@ export default function JudgeSettings() {
   // a provider that is reachable in principle is checked once, so the row says whether it answers
   useEffect(() => {
     if (!on || !configured || test || testing) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- probes the provider once it is configured
     void runTest(judgeCfg);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [on, configured, effective]);
@@ -104,6 +105,7 @@ export default function JudgeSettings() {
             {test && (test.ok
               ? <span className="text-2xs text-ink-muted font-mono" data-judge-test-result>{fmt(t('judge.available'), { model: test.r.model || providerLabel(test.r.provider), ms: test.r.ms, c: t(test.r.calibrated ? 'judge.calibrated' : 'judge.uncalibrated') })}</span>
               : <span className="text-2xs text-red-500" data-judge-test-result>{fmt(t('judge.unavailable'), { e: test.error })}</span>)}
+            {/* eslint-disable-next-line react-hooks/purity -- the remaining time as of this render; the row is redrawn with the settings */}
             {tripped && <span className="text-2xs text-amber-600" data-judge-tripped>{fmt(t('judge.trippedNow'), { s: Math.max(1, Math.round((tripped.until - Date.now()) / 1000)) })}</span>}
           </div>
         </div>
