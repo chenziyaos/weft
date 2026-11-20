@@ -22,6 +22,14 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
   `npx weft-canvas@<version> mcp`, so it needs no npm download and no
   published version.
 
+### Fixed
+
+- Desktop builds now carry the update feed: releases get `latest.yml`,
+  `latest-mac.yml` and `latest-linux.yml`, and each app gets the
+  `app-update.yml` that points at them. v0.5.17 shipped without either, so
+  its in-app update check always fails; install the next version from
+  Releases by hand.
+
 ## [v0.5.17] - 2026-11-19
 
 First desktop release of this fork. Desktop releases are tagged
