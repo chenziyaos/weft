@@ -1,7 +1,7 @@
 {
   "name": "weft-desktop",
   "private": true,
-  "version": "0.5.17",
+  "version": "0.5.18",
   "description": "Desktop shell for Weft — same app, same server, one window",
   "main": "main.js",
   "scripts": {

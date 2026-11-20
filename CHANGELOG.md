@@ -21,10 +21,6 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
   (`plugins/weft/server/weft.mjs`, about 0.3 MB) instead of
   `npx weft-canvas@<version> mcp`, so it needs no npm download and no
   published version.
-- The session atlas, material reader, thought-map dialog, model-key dialog,
-  condense dialog, response viewer, host handoff panel and example canvas load
-  on first use. The startup chunk drops from 1,187.5 kB (395.3 kB gzip) to
-  880.5 kB (284.8 kB gzip) in `npm run build`.
 - `eslint-plugin-react-hooks` 7.1 and its React Compiler rules. Of the 28
   errors they raised, 14 are fixed in code (state reset during render instead
   of in an effect, a ref read replaced by state, effects moved below the
@@ -32,15 +28,37 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
   reason, mostly effects that load from a bridge or reset a dialog when it
   opens.
 
+## [v0.5.18] - 2026-11-20
+
+The first desktop release that can update itself: from this version on, the
+app finds later releases through the update feed attached to each release.
+v0.5.17 cannot, so move from it by installing this version by hand.
+
+### Changed
+
+- The session atlas, material reader, thought-map dialog, model-key dialog,
+  condense dialog, response viewer, host handoff panel and example canvas load
+  on first use. The startup chunk drops from 1,187.5 kB (395.3 kB gzip) to
+  880.5 kB (284.8 kB gzip) in `npm run build`.
+
 ### Fixed
 
-- Desktop builds now carry the update feed: releases get `latest.yml`,
+- Desktop builds carry the update feed: the release gets `latest.yml`,
   `latest-mac.yml` and `latest-linux.yml`, and each app gets the
   `app-update.yml` that points at them. v0.5.17 shipped without either, so
-  its in-app update check always fails; install the next version from
-  Releases by hand.
+  its in-app update check always fails.
 - OpenRouter OAuth sign-in preselects OpenRouter's recommended models, not
   those of whichever preset was chosen before in the same session.
+
+### Known limitations
+
+- All builds are still unsigned. On macOS the app is ad-hoc signed and not
+  notarized: allow the first launch under System Settings → Privacy &
+  Security → Open Anyway. The macOS updater checks the signature of a
+  download, so an in-app update there may fail to install; download the new
+  version from Releases if it does. Windows SmartScreen asks once.
+- An update from one release to the next has not been tried yet, because
+  this is the first release with a feed.
 
 ## [v0.5.17] - 2026-11-19
 
