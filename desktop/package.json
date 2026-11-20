@@ -74,7 +74,11 @@
       "category": "Office"
     },
     "npmRebuild": false,
-    "publish": null
+    "publish": {
+      "provider": "github",
+      "owner": "chenziyaos",
+      "repo": "weft"
+    }
   },
   "dependencies": {
     "electron-updater": "^6.8.9"

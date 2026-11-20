@@ -21,12 +21,26 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
   (`plugins/weft/server/weft.mjs`, about 0.3 MB) instead of
   `npx weft-canvas@<version> mcp`, so it needs no npm download and no
   published version.
+- The session atlas, material reader, thought-map dialog, model-key dialog,
+  condense dialog, response viewer, host handoff panel and example canvas load
+  on first use. The startup chunk drops from 1,187.5 kB (395.3 kB gzip) to
+  880.5 kB (284.8 kB gzip) in `npm run build`.
 - `eslint-plugin-react-hooks` 7.1 and its React Compiler rules. Of the 28
   errors they raised, 14 are fixed in code (state reset during render instead
   of in an effect, a ref read replaced by state, effects moved below the
   function they call); the other 14 carry a one-line `eslint-disable` with the
   reason, mostly effects that load from a bridge or reset a dialog when it
   opens.
+
+### Fixed
+
+- Desktop builds now carry the update feed: releases get `latest.yml`,
+  `latest-mac.yml` and `latest-linux.yml`, and each app gets the
+  `app-update.yml` that points at them. v0.5.17 shipped without either, so
+  its in-app update check always fails; install the next version from
+  Releases by hand.
+- OpenRouter OAuth sign-in preselects OpenRouter's recommended models, not
+  those of whichever preset was chosen before in the same session.
 
 ## [v0.5.17] - 2026-11-19
 

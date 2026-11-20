@@ -1,5 +1,5 @@
 import { useUiStore } from '../../lib/ui-store';
-import SessionAtlas from '../SessionAtlas';
+import SessionAtlas from '../LazySessionAtlas';
 
 // The ⋯ menu's "memory" entry: the atlas surface opened on its memory page
 // (Weft's own library beside the other agents' memory files, the
