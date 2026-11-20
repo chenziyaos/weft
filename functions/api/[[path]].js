@@ -534,7 +534,7 @@ async function handleJudge(body) {
     const text = await r.text();
     return new Response(text || '{}', { status: r.status, headers: { 'Content-Type': 'application/json' } });
   } catch (e) {
-    return json({ error: e instanceof Error ? e.message : String(e) }, 502);
+    return json({ error: e instanceof Error ? e.message : 'request failed' }, 502);
   }
 }
 
@@ -602,11 +602,11 @@ async function handleFetchUrl(body) {
     const html = (await r.text()).slice(0, 800_000);
     const title = (html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || '').replace(/\s+/g, ' ').trim();
     const text = html
-      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+      .replace(/<script[\s\S]*?<\/script\b[^>]*>/gi, ' ')
+      .replace(/<style[\s\S]*?<\/style\b[^>]*>/gi, ' ')
       .replace(/<(nav|footer|header|aside)[\s\S]*?<\/\1>/gi, ' ')
       .replace(/<[^>]+>/g, ' ')
-      .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+      .replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&')
       .replace(/[ \t]+/g, ' ')
       .replace(/\s*\n\s*(\s*\n\s*)+/g, '\n\n')
       .trim()

@@ -1063,9 +1063,16 @@ async function installWhyLayer(ctx, config) {
   ctx.logger.info('[dsh-weft] why layer: ' + (wantTools ? 'why_check why_file why_find why_recall, /why' : 'no tools') + (wantPrompt && wantTools ? ', prompt section' : ''))
 }
 
+// a loop, not /\/+$/: that regex backtracks on long runs of '/'
+function trimTrailingSlashes(s) {
+  let end = s.length
+  while (end > 0 && s[end - 1] === '/') end--
+  return s.slice(0, end)
+}
+
 export async function apply(ctx, config) {
   const prefix = typeof config?.mountPrefix === 'string' && config.mountPrefix.startsWith('/') && config.mountPrefix.length > 1
-    ? config.mountPrefix.replace(/\/+$/, '')
+    ? trimTrailingSlashes(config.mountPrefix)
     : '/weft'
   const trustedHosts = new Set(['localhost', '127.0.0.1', ...[...(config?.trustedHosts ?? [])].map(h => String(h).trim().toLowerCase()).filter(Boolean)])
 
@@ -1208,7 +1215,7 @@ export async function apply(ctx, config) {
         const html = r.body?.kind === 'html' ? r.body.content : null
         const title = (html && /<title[^>]*>([^<]*)<\/title>/i.exec(html)?.[1]?.trim()) || new URL(target).hostname
         const text = html
-          ? html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\s+\n/g, '\n').replace(/[ \t]+/g, ' ').trim()
+          ? html.replace(/<script[\s\S]*?<\/script\b[^>]*>|<style[\s\S]*?<\/style\b[^>]*>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/\s+\n/g, '\n').replace(/[ \t]+/g, ' ').trim()
           : String(r.body?.content ?? '')
         return sendJson(res, 200, { title, text, fetchedAt: new Date().toISOString(), ...(html ? { html } : {}), url: r.url ?? target, truncated: !!r.truncated })
       }

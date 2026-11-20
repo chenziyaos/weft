@@ -27,6 +27,19 @@ carry separate version numbers; CLI releases are tagged `cli-v<version>`.
   function they call); the other 14 carry a one-line `eslint-disable` with the
   reason, mostly effects that load from a bridge or reset a dialog when it
   opens.
+- Workflows default to read-only tokens; only the jobs that write a release
+  or publish get `contents: write` / `id-token: write`. `cli/Dockerfile`
+  pins its base image by digest, and Dependabot updates the digest.
+
+### Fixed
+
+- Text extracted from fetched web pages (proxy, Pages function, DSH plugin,
+  attachment fallback) drops `<script>` / `<style>` blocks whose end tag has
+  trailing whitespace, and keeps `&amp;lt;` as the literal text `&lt;`
+  instead of decoding it twice.
+- Pasting a tab-separated table escapes backslashes in cells, so a cell
+  ending in `\` no longer breaks the table.
+- `SECURITY.md` lists the CodeQL findings accepted by design and why.
 
 ## [v0.5.18] - 2026-11-20
 
