@@ -76,6 +76,16 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      # electron-updater needs both halves: the feed on the release (latest*.yml)
+      # and the app's own pointer to it (resources/app-update.yml).
+      - name: Check the update feed was generated
+        working-directory: desktop/out
+        shell: bash
+        run: |
+          shopt -s nullglob
+          feeds=(latest*.yml) pointers=(*/Weft.app/Contents/Resources/app-update.yml *-unpacked/resources/app-update.yml)
+          echo "feeds: ${feeds[*]}"; echo "pointers: ${pointers[*]}"
+          [ ${#feeds[@]} -gt 0 ] && [ ${#pointers[@]} -gt 0 ]
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: desktop-${{ matrix.os }}
@@ -84,6 +94,7 @@ jobs:
             desktop/out/*.zip
             desktop/out/*.exe
             desktop/out/*.AppImage
+            desktop/out/latest*.yml
           if-no-files-found: error
       - name: Upload into draft release
         if: startsWith(github.ref, 'refs/tags/')
